@@ -8,14 +8,16 @@ module.exports = function(app){
   });
 
   app.get('/admin/oauth/login', (req, res, next) => {
-    const fullUrl = appUrl + '/admin' //+ req.originalUrl;
-    const redirectUrl = `${apiUrl}/oauth/site/${siteId}/login?redirectUrl=${fullUrl}&forceNewLogin=1`;
+    const fullUrl = appUrl + '/admin';
+    const redirectUrl = `${apiUrl}/oauth/site/${siteId}/login?redirectUrl=${fullUrl}&loginPriviliged=1`;
     res.redirect(redirectUrl);
   });
 
   app.get('/admin/logout', (req, res, next) => {
     req.session.destroy(() => {
-      res.redirect('/');
+      const fullUrl = appUrl + '/admin';
+      const redirectUrl = `${apiUrl}/oauth/site/${siteId}/logout?redirectUrl=${fullUrl}`;
+      res.redirect(redirectUrl);
     });
   });
 }
