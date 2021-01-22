@@ -3,7 +3,7 @@ const k8s = require('@kubernetes/client-node');
 const getK8sApi = () => {
   const kc = new k8s.KubeConfig();
   kc.loadFromCluster();
-  
+
   return k8sApi = kc.makeApiClient(k8s.NetworkingV1beta1Api);
 }
 
@@ -23,7 +23,7 @@ const getIngressBody = (databaseName, domain) => {
     metadata: {
       name: databaseName,
       annotations: {
-        'cert-manager.io/cluster-issuer': 'openstad-letsencrypt-prod', // Todo: make this configurable
+        'cert-manager.io/cluster-issuer': process.env.KUBERNETES_CLUSTER_ISSUER || 'openstad-letsencrypt-prod',
         'kubernetes.io/ingress.class': 'nginx'
       }
     },
@@ -33,8 +33,8 @@ const getIngressBody = (databaseName, domain) => {
         http: {
           paths: [{
             backend: {
-              serviceName: 'openstad-frontend', // Todo: make this configurable
-              servicePort: 4444 // Todo: make this configurable
+              serviceName: process.env.KUBERNETES_FRONTEND_SERVICE_NAME || 'openstad-frontend',
+              servicePort: process.env.KUBERNETES_FRONTEND_SERVICE_PORT || 4444
             },
             path: '/'
           }]
@@ -54,7 +54,10 @@ const getIngressBody = (databaseName, domain) => {
  * @returns {Promise<{response: http.IncomingMessage; body: NetworkingV1beta1Ingress}>}
  */
 exports.add = async (newSite) => {
-  return getK8sApi().createNamespacedIngress(process.env.KUBERNETES_NAMESPACE, getIngressBody(newSite.getCmsDatabaseName(), newSite.getDomain()));
+  return getK8sApi().createNamespacedIngress(
+    process.env.KUBERNETES_NAMESPACE,
+    getIngressBody(newSite.getCmsDatabaseName(), newSite.getDomain())
+  );
 };
 
 /**
