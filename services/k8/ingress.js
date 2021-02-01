@@ -34,7 +34,7 @@ const getIngressBody = (databaseName, domain) => {
           paths: [{
             backend: {
               serviceName: process.env.KUBERNETES_FRONTEND_SERVICE_NAME || 'openstad-frontend',
-              servicePort: process.env.KUBERNETES_FRONTEND_SERVICE_PORT || 4444
+              servicePort: process.env.KUBERNETES_FRONTEND_SERVICE_PORT ? parseInt(process.env.KUBERNETES_FRONTEND_SERVICE_PORT) : 4444
             },
             path: '/'
           }]
