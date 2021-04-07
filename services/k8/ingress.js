@@ -14,16 +14,15 @@ const getK8sApi = () => {
  *
  * @param databaseName
  * @param domain
- * @returns {{metadata: {name: *, annotations: {"cert-manager.io/cluster-issuer": string, "kubernetes.io/ingress.class": string}}, apiVersions: string, kind: string, spec: {rules: [{host: *, http: {paths: [{path: string, backend: {servicePort: number, serviceName: string}}]}}], tls: [{secretName: *, hosts: [*]}]}}}
+ * @returns {{metadata: {name: *, annotations: {"kubernetes.io/ingress.class": string}}, apiVersions: string, kind: string, spec: {rules: [{host: *, http: {paths: [{path: string, backend: {servicePort: number, serviceName}}]}}], tls: [{secretName: *, hosts: [*]}]}}}
  */
 const getIngressBody = (databaseName, domain) => {
-  return {
+  const ingressBody = {
     apiVersions: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
       name: databaseName,
       annotations: {
-        'cert-manager.io/cluster-issuer': process.env.KUBERNETES_CLUSTER_ISSUER || 'openstad-letsencrypt-prod',
         'kubernetes.io/ingress.class': 'nginx'
       }
     },
@@ -45,7 +44,13 @@ const getIngressBody = (databaseName, domain) => {
         hosts: [domain]
       }]
     }
+  };
+
+  if (process.env.KUBERNETES_CLUSTER_ISSUER_ENABLED) {
+    ingressBody.metadata.annotations['cert-manager.io/cluster-issuer'] = process.env.KUBERNETES_CLUSTER_ISSUER || 'openstad-letsencrypt-prod';
   }
+
+  return ingressBody;
 };
 
 /**
