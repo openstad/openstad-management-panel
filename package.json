@@ -41,7 +41,7 @@
     "knex": "^0.95.11",
     "memory-cache": "^0.2.0",
     "merge": "^2.1.1",
-    "moment-timezone": "^0.5.23",
+    "moment-timezone": "^0.5.35",
     "mongodb": "^2.2.33",
     "mongodb-backup-4x": "^3.2.1",
     "mongodb-restore": "^1.6.2",
