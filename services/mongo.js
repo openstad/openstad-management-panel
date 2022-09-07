@@ -139,3 +139,15 @@ exports.import = (dbName, dirname) => {
 
   });
 }
+
+exports.editSiteTitle = (siteTitle, dbName, collectionName) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, function(err, db) {
+      if (err) return reject(err);
+        var dbo = db.db(dbName);
+        dbo.collection(collectionName).updateMany({type: {$regex : /global/}}, {$set: {siteTitle}});
+        db.close();
+        resolve();
+    });
+  });
+}

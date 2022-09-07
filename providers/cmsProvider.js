@@ -204,6 +204,16 @@ const uploadAttachments = async ({ targetUrl, attachmentsDir, attachments }) => 
 
 };
 
+/**
+ * Rename the siteTitle field of the imported site and update it in the database
+ * 
+ * @param newSite
+ * @param mongoPath
+ */
+ const renameSiteTitleInDatabase = async (newSite) => {
+  console.log(`renaming the site title to ${newSite.title}`);
+  return mongoService.editSiteTitle(newSite.title, newSite.getCmsDatabaseName(), "aposDocs");
+};
 
 module.exports = exports = {
   generateId,
@@ -212,4 +222,5 @@ module.exports = exports = {
   importCmsDatabase,
   renameAttachments,
   uploadAttachments,
+  renameSiteTitleInDatabase,
 }
