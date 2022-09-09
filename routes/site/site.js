@@ -169,12 +169,14 @@ module.exports = function(app){
 
         // domain
         const domain = req.formattedDomain;
+        const siteIdToCopy = req.body.siteIdToCopy;
+        const shouldCopyUsersAndRights = req.body.copyUsers;
 
         // collect data
         const newSite = new NewSite(domain, req.body.siteName, req.body.fromEmail, req.body.fromName);
         let siteData = await openstadSiteDataService.collectData({
           uniqueSiteId: newSite.getUniqueSiteId(),
-          siteIdToCopy: req.body.siteIdToCopy,
+          siteIdToCopy: siteIdToCopy,
           includeChoiceGuide: req.body['choice-guides'],
           includeCmsAttachments: true
         });
@@ -200,18 +202,22 @@ module.exports = function(app){
           oauthData: siteData.oauthData
         });
 
-          await k8Ingress.ensureIngressForAllDomains();
+        if(shouldCopyUsersAndRights) {
+          await openstadSiteDataService.copyUsersOfSite(siteIdToCopy, site.id);
+        }
 
-          // reset site config in frontend
-          // api does this, but will fail on url change because new site wont exists yet if ingress is still being created
-          if (process.env.FRONTEND_URL) {
-              await fetch(process.env.FRONTEND_URL + '/config-reset')
-          }
+        await k8Ingress.ensureIngressForAllDomains();
 
-          req.flash('success', { msg: 'De site is succesvol aangemaakt'});
-          req.session.save( () => {
-              res.redirect('/admin/site/' + site.id)
-          });
+        // reset site config in frontend
+        // api does this, but will fail on url change because new site wont exists yet if ingress is still being created
+        if (process.env.FRONTEND_URL) {
+            await fetch(process.env.FRONTEND_URL + '/config-reset')
+        }
+
+        req.flash('success', { msg: 'De site is succesvol aangemaakt'});
+        req.session.save( () => {
+            res.redirect('/admin/site/' + site.id)
+        });
 
       } catch (error) {
         console.error(error);
