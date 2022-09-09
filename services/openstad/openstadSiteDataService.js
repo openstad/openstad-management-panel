@@ -222,8 +222,8 @@ exports.createSite = async ({ user, dataDir, newSite, apiData, cmsData, oauthDat
 
     const oauthClients = await oauthProvider.createOauth(newSite, oauthData.clients);
     await cmsProvider.importCmsDatabase(newSite, cmsData.mongoPath);
-
     const site = await apiProvider.createSite(newSite, apiData.site, oauthClients);
+    await cmsProvider.renameSiteTitleInDatabase(newSite);
 
     if (apiData.choiceGuides) {
       await apiProvider.createChoiceGuides(site.id, apiData.choiceGuides);
