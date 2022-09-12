@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 const userClientApi = require('../services/userClientApi');
+const userRoleApi = require('../services/userRoleApi');
+const siteApi = require('../services/siteApi');
 
 const protocol = process.env.FORCE_HTTP ? 'http' : 'https';
 
@@ -129,4 +131,36 @@ exports.makeUserSiteAdmin = (externalUserId, oauthDefaultId) => {
       method: 'POST',
       body: JSON.stringify(body)
     });
+};
+
+
+exports.copyUsersFromSite = async (oldSiteId, newSiteId) => {
+  const roleResponse = await userRoleApi.fetchAll();
+  const roleMap = new Map(roleResponse.map(role => [role.name, role.id]));
+  const newSite = await siteApi.fetch(newSiteId);
+  const newClientId = newSite.config?.oauth?.default?.id;
+  const usersOfOldSite = await siteApi.fetchUsersOfSite(oldSiteId);
+
+  const requests = usersOfOldSite.map((user) => {
+  const mappedRoleId = roleMap.get(user.role);
+  console.log(`Adding userrole to client with id: ${newClientId}, externalUserId: ${user.externalUserId} and roleId: ${mappedRoleId}`)
+
+  const url = process.env.USER_API + '/api/admin/user/' + user.externalUserId;
+  const body = {
+    client_id: process.env.USER_API_CLIENT_ID,
+    client_secret: process.env.USER_API_CLIENT_SECRET,
+    roles: {},
+  };
+
+  body.roles[newClientId] = mappedRoleId;
+  return fetch(
+    url,
+    {
+      headers: {"Content-type": "application/json"},
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+  });
+
+await Promise.all(requests)
 };
