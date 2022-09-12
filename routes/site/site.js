@@ -243,7 +243,9 @@ module.exports = function(app){
 
         // domain
         let domain = req.formattedDomain;
-
+        const shouldCopyUsersAndRights = req.body.copyUsers;
+        const siteIdToCopy = req.body.siteIdToCopy;
+        
         // extract import file
         let importId = Math.round(new Date().getTime() / 1000);
         let importDir = tmpDir + '/' + importId;
@@ -265,6 +267,10 @@ module.exports = function(app){
           cmsData: siteData.cmsData, 
           oauthData: siteData.oauthData
         });
+
+        if(shouldCopyUsersAndRights) {
+          await openstadSiteDataService.copyUsersOfSite(siteIdToCopy, site.id);
+        }
 
         await k8Ingress.ensureIngressForAllDomains()
 
