@@ -1,8 +1,7 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.USER_API + '/api/admin';
 const nestedObjectAssign = require('nested-object-assign');
 const httpBuildQuery = require('../utils/httpBuildQuery');
-
 console.log('apiUrl', apiUrl)
 
 const apiCredentials = {
@@ -10,76 +9,63 @@ const apiCredentials = {
     client_secret: process.env.USER_API_CLIENT_SECRET,
 }
 
-exports.fetch = (userId) => {
-  const options = {
+const encodedCredentials = "Basic " + Buffer.from(apiCredentials.client_id+":"+apiCredentials.client_secret).toString('base64');
+
+exports.fetch = async (userId) => {
+  const response = await fetch(`${apiUrl}/user/${userId}`, {
     method: 'GET',
-    uri: `${apiUrl}/user/${userId}`,
     headers: {
-        'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': encodedCredentials
     },
-    body: apiCredentials,
-    json: true // Automatically parses the JSON string in the response
-  }
-
-  console.log('fetch user options', options)
-
-
-  return rp(options);
-//  .then(response => response.json());
+  });
+  return await response.json();
 }
 
-exports.fetchAll = (params) => {
-  const query = params ? httpBuildQuery(params) : '';
-
-  const options = {
+exports.fetchAll = async (params) => {
+  const response = await fetch(`${apiUrl}/users?${params ? httpBuildQuery(params) : ''}`, {
     method: 'GET',
-    uri: `${apiUrl}/users?${query}`,
     headers: {
-        'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': encodedCredentials
     },
-    body: apiCredentials,
-    json: true // Automatically parses the JSON string in the response
-  }
-
-  console.log('fetchAll user options', options)
-
-
-  return rp(options);
-//  .then(response => response.json());
+  });
+  return await response.json();
 }
 
 exports.create = (data) => {
-  let body = nestedObjectAssign(data, apiCredentials);
-
-  return rp({
-      method: 'POST',
-      uri: `${apiUrl}/user`,
-      headers: {
-          'Accept': 'application/json'
-      },
-      body: body,
-      json: true // Automatically parses the JSON string in the response
+  return fetch(`${apiUrl}/user`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(nestedObjectAssign(data, apiCredentials)),
   });
 }
 
-exports.update = (userId, data) => {
-
-  return rp({
-    method: 'POST',
-    uri: `${apiUrl}/user/${userId}`,
-    headers: {
+exports.update = async (userId, data) => {
+  const body = nestedObjectAssign(data, apiCredentials)
+  const res = await fetch(`${apiUrl}/user/${userId}`, {
+      method: 'POST',
+      headers: {
         'Accept': 'application/json',
-    },
-    body: nestedObjectAssign(data, apiCredentials),
-    json: true // Automatically parses the JSON string in the response
-  });
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+    });
+    return await res.json()
 }
 
 exports.delete = (userId, data) => {
-  return rp({
+  return fetch(`${apiUrl}/user/${userId}/delete`, {
     method: 'POST',
-    uri: `${apiUrl}/user/${userId}/delete`,
-    json: true, // Automatically parses the JSON string in the response
-    body: nestedObjectAssign(data, apiCredentials),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(nestedObjectAssign(data, apiCredentials)),
   });
 }

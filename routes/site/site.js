@@ -245,7 +245,7 @@ module.exports = function(app){
         let domain = req.formattedDomain;
         const shouldCopyUsersAndRights = req.body.copyUsers;
         const siteIdToCopy = req.body.siteIdToCopy;
-        
+
         // extract import file
         let importId = Math.round(new Date().getTime() / 1000);
         let importDir = tmpDir + '/' + importId;
