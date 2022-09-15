@@ -26,6 +26,18 @@ exports.fetchAll = () => {
   });
 }
 
+exports.fetchUsersOfSite = (siteId) => {
+  return rp({
+    method: 'GET',
+    uri: `${apiUrl}/site/${siteId}/user`,
+    headers: {
+        'Accept': 'application/json',
+        "X-Authorization": siteApiKey
+    },
+    json: true
+  })
+}
+
 exports.anonymize = (token, siteId) => {
   return rp({
     method: 'PUT',

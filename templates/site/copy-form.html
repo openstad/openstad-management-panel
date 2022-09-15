@@ -68,6 +68,17 @@
               {% endfor %}
             </select>
 
+                <div class="form-group row pt-3">
+                  <div class="col-sm-12">
+                    <input id="checkbox-auth-copyUsers" type="checkbox" name="copyUsers" />
+                    <label for="checkbox-auth-copyUsers">
+                      Kopieer de gebruikers en rechten van de geselecteerde site naar de nieuwe site
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="form-group row">
               <label class="col-form-label col-sm-4" for="">
                 These elements will always be exported
@@ -173,7 +184,6 @@
             #}
           </div>
         </div>
-      </div>
       <div class="onboarding-slide">
         <div class="onboarding-side-by-side">
           <div class="onboarding-media">
@@ -227,5 +237,7 @@
     </div>
   <input type="hidden" name="_csrf" value="{{csrfToken}}">
 </form>
+</div>      
 </div>
+
 {% endblock %}

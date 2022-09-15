@@ -283,6 +283,12 @@ exports.createSite = async ({ user, dataDir, newSite, apiData, cmsData, oauthDat
   }
 };
 
+
+exports.copyUsersOfSite = async (siteIdToCopy, newSiteId) => {
+  console.log(`Copying users and rights from site with id ${siteIdToCopy} to site with id ${newSiteId}`);
+  await oauthProvider.copyUsersFromSite(siteIdToCopy, newSiteId);
+};
+
 const validateInput = async (apiData, oauthData, cmsData) => {
   console.log('validateInput', apiData, oauthData, cmsData);
 

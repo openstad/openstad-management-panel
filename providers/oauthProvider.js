@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 const userClientApi = require('../services/userClientApi');
+const siteApi = require('../services/siteApi');
+const userApi = require('../services/userApi');
 
 const protocol = process.env.FORCE_HTTP ? 'http' : 'https';
 
@@ -129,4 +131,23 @@ exports.makeUserSiteAdmin = (externalUserId, oauthDefaultId) => {
       method: 'POST',
       body: JSON.stringify(body)
     });
+};
+
+
+exports.copyUsersFromSite = async (oldSiteId, newSiteId) => {
+  const oldSite = await siteApi.fetch(oldSiteId);
+  const oldClientId = oldSite.config?.oauth?.default?.['auth-client-id'];
+  const oldClient = await userClientApi.fetch(oldClientId, true, []);
+  const usersOfOldSite = oldClient.userRoles;
+
+  const newSite = await siteApi.fetch(newSiteId);
+  const newClientId = newSite.config?.oauth?.default?.id;
+  
+  const requests = usersOfOldSite.map((userRole) => {
+    console.log(`Adding userrole to client with id: ${newClientId}, userId: ${userRole.userId} and roleId: ${userRole.roleId}`);
+    let body = {roles:{}};
+    body.roles[newClientId] = userRole.roleId;
+    return userApi.update(userRole.userId, body);
+  });
+  await Promise.all(requests)
 };
