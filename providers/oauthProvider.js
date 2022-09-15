@@ -1,6 +1,5 @@
 const fetch = require('node-fetch');
 const userClientApi = require('../services/userClientApi');
-const userRoleApi = require('../services/userRoleApi');
 const siteApi = require('../services/siteApi');
 const userApi = require('../services/userApi');
 
@@ -135,10 +134,10 @@ exports.makeUserSiteAdmin = (externalUserId, oauthDefaultId) => {
 };
 
 
-exports.copyUsersFromSite = async (oldSiteId, newSiteId) => {  
+exports.copyUsersFromSite = async (oldSiteId, newSiteId) => {
   const oldSite = await siteApi.fetch(oldSiteId);
   const oldClientId = oldSite.config?.oauth?.default?.['auth-client-id'];
-  const oldClient = await userClientApi.fetch(oldClientId);
+  const oldClient = await userClientApi.fetch(oldClientId, true, []);
   const usersOfOldSite = oldClient.userRoles;
 
   const newSite = await siteApi.fetch(newSiteId);

@@ -1,25 +1,28 @@
+const fetch = require('node-fetch');
 const rp = require('request-promise');
 const apiUrl = process.env.USER_API + '/api/admin';
 const nestedObjectAssign = require('nested-object-assign');
 const httpBuildQuery = require('../utils/httpBuildQuery')
-
 
 const apiCredentials = {
     client_id:  process.env.USER_API_CLIENT_ID,
     client_secret: process.env.USER_API_CLIENT_SECRET,
 }
 
-exports.fetch = (clientId) => {
-  return rp({
+const encodedCredentials = "Basic " + Buffer.from(apiCredentials.client_id+":"+apiCredentials.client_secret).toString('base64');
+
+exports.fetch = async(clientId, withUserRoles=false, excludingRoles=[]) => {
+  const excludingRolesParam = excludingRoles.join(',');
+
+  const response = await fetch(`${apiUrl}/client/${clientId}?withUserRoles=${withUserRoles}&excludingRoles=${excludingRolesParam}`, {
     method: 'GET',
-    uri: `${apiUrl}/client/${clientId}`,
     headers: {
-        'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': encodedCredentials
     },
-    body: apiCredentials,
-    json: true // Automatically parses the JSON string in the response
-  })
-//  .then(response => response.json());
+  });
+  return await response.json();
 }
 
 exports.fetchAll = (params) => {
