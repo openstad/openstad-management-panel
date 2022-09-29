@@ -1,24 +1,31 @@
 exports.configSchema = {
-  basicAuth:
-    [
-      {
-        key: 'active',
-        type: 'boolean',
-        default: false,
-        label: "Is active?"
-      },
-      {
-        key: 'user',
-        type: 'string',
-        default: 'openstad',
-        label: "Username"
-      },
-      {
-        key: 'password',
-        type: 'string',
-        default: process.env.BASIC_AUTH_DEFAULT_PW,
-        label: "Password"
-      },
+  project: [
+    {
+      key: 'endDate',
+      type: 'date',
+      default: null,
+      label: "Project end date"
+    },
+  ],
+  basicAuth: [
+    {
+      key: 'active',
+      type: 'boolean',
+      default: false,
+      label: "Is active?"
+    },
+    {
+      key: 'user',
+      type: 'string',
+      default: 'openstad',
+      label: "Username"
+    },
+    {
+      key: 'password',
+      type: 'string',
+      default: process.env.BASIC_AUTH_DEFAULT_PW,
+      label: "Password"
+    },
   ],
   ideas:  [
     {
@@ -85,7 +92,6 @@ exports.configSchema = {
       label: "Display deprecated widgets?"
     },
   ],
-
   cms: [{
     key: 'redirectURI',
     type: 'string',
