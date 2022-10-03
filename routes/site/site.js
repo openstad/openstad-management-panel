@@ -154,6 +154,7 @@ module.exports = function(app){
       res.render(`site/settings/${req.params.page}.html`, {
         siteConfigSchema: siteConfigSchema,
         ideaFields: siteConfigSchema.ideas,
+        anonymizeFields: siteConfigSchema.anonymize,
         pageName: req.params.page
       });
     }

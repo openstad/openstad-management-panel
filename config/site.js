@@ -7,6 +7,46 @@ exports.configSchema = {
       label: "Project end date"
     },
   ],
+
+  anonymize: [
+    {
+      key: 'anonimizeUsersXDaysAfterEndDate',
+      type: 'number',
+      default: 60,
+      label: "Anonimize users x days after the project end date"
+    },
+    {
+      key: 'warnUsersAfterXDaysOfInactivity',
+      type: 'number',
+      default: 770,
+      label: "Warn users after x days of inactivity",
+    },
+    {
+      key: 'anonimizeUsersAfterXDaysOfInactivity',
+      type: 'number',
+      default: 860,
+      label: "Anonimize users after x days of inactivity"
+    },
+  ],
+
+  inactiveWarningEmail: [
+    {
+      parentKey: 'anonymize',
+      key: 'subject',
+      type: 'string',
+      default: '',
+      label: 'Subject line'
+    },
+    {
+      parentKey: 'anonymize',
+      key: 'template',
+      type: 'string',
+      default: '',
+      textarea: true,
+      label: 'Template (variables available)'
+    },
+  ],
+
   basicAuth: [
     {
       key: 'active',
