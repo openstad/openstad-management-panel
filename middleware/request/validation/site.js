@@ -95,6 +95,8 @@ module.exports = (req, res, next) => {
       const redirectUrl = getRefererUrl(req.header('Referer'));
       return res.redirect(redirectUrl);
     });
+  } else {
+    return next()
   }
 
 }
