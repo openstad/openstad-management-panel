@@ -11,13 +11,13 @@ const PATTERN = 'pattern';
  * @returns {string|boolean}
  */
 function validate (value, pattern, field) {
-  const regExp = new RegExp(`[${pattern}]`);
+  const regExp = pattern;
   const matches = regExp.test(value)
-  if (matches === false) {
+  if (matches) {
     return true;
   }
 
-  return `${field.label} should not contain special characters like: ${pattern}`;
+  return `${field.label} is not valid`;
 }
 
 /**
@@ -97,5 +97,4 @@ module.exports = (req, res, next) => {
     });
   }
 
-  next();
 }

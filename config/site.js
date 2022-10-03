@@ -149,7 +149,7 @@ exports.configSchema = {
       validation: [
         {
           name: 'pattern',
-          value: '!:A-Z'
+          value: /.*/ // email is almost impossible to validate with a regex
         }
       ]
     },
@@ -162,7 +162,7 @@ exports.configSchema = {
       validation: [
         {
           name: 'pattern',
-          value: '!:A-Z'
+          value: /.*/ // email is almost impossible to validate with a regex
         }
       ]
     },
