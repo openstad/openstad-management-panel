@@ -187,10 +187,10 @@ exports.configSchema = {
   ],
   notifications : [
     {
-      key: 'to',
+      key: 'fromAddress',
       type: 'string',
       default: '',
-      label: 'To e-mail address',
+      label: 'From e-mail address',
       trim: true,
       validation: [
         {
@@ -200,10 +200,23 @@ exports.configSchema = {
       ]
     },
     {
-      key: 'from',
+      key: 'projectmanagerAddress',
       type: 'string',
       default: '',
-      label: 'From e-mail address',
+      label: 'Projectmanager email address',
+      trim: true,
+      validation: [
+        {
+          name: 'pattern',
+          value: /.*/ // email is almost impossible to validate with a regex
+        }
+      ]
+    },
+    {
+      key: 'siteadminAddress',
+      type: 'string',
+      default: '',
+      label: 'Site Admin email address',
       trim: true,
       validation: [
         {
