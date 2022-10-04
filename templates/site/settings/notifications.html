@@ -16,15 +16,18 @@
     </div>
     <div class="col-sm-9">
       <div class="card-container">
+
         <div class="card card-openstad">
+          <legend><span>{{ __('Notification settings') }}</span></legend>
           <form method="POST" action="/admin/site/{{site.id}}">
             {{ renderFields(siteConfigSchema.notifications, site.config.notifications, 'config[notifications]') }}
             <div class="form-buttons-w">
               <button class="btn btn-outline-primary" type="submit">Opslaan</button>
             </div>
-          <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+          </form>
         </div>
+
       </div>
     </div>
   </div>
