@@ -83,19 +83,18 @@ exports.dbExists = (dbName) => {
 }
 
 exports.deleteDb = (dbName) => {
-
   return new Promise((resolve, reject) => {
     MongoClient.connect(getMongoDbConnectionString(dbName), (err, client) => {
       if (err) {
-        reject(err);
-      } else {        
-        // drop the database
-        client.dropDatabase(function(err, result) {
-            if(err) reject(err);
-            client.close();
-            resolve(result);
-        });
+        return reject(err);
       }
+      
+      // drop the database
+      client.dropDatabase(function(err, result) {
+        client.close();
+        if (err) return reject(err);
+        resolve(result);
+      });
     });
   });
 }
