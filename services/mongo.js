@@ -1,11 +1,35 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
-const host = process.env.MONGO_DB_HOST || 'localhost';
-const port = process.env.MONGO_DB_PORT ||27017;
-const MongoServer = new mongodb.Server(host, port);
 const mongoBackup = require('mongodb-backup-4x');
 const mongoRestore = require('mongodb-restore');
-const url = 'mongodb://' + host + ':' + port;
+
+function getMongoDbConnectionString(database) {
+  // Allow the connection string builder to be overridden by an environment variable
+  // We replace '{database}' in this connection string with the database we are looking for
+  if (process.env.MONGO_DB_CONNECTION_STRING) {
+    return process.env.MONGO_DB_CONNECTION_STRING.replace(
+      '{database}',
+      database || ''
+    );
+  }
+
+  const host = process.env.MONGO_DB_HOST || 'localhost';
+  const port =
+    process.env.MONGODB_PORT_27017_TCP_PORT ||
+    process.env.MONGO_DB_PORT ||
+    27017;
+  const user = process.env.MONGO_DB_USER || '';
+  const password = process.env.MONGO_DB_PASSWORD || '';
+  const authSource = process.env.MONGO_DB_AUTHSOURCE || '';
+
+  const useAuth = user && password;
+
+  return `mongodb://${useAuth ? `${user}:${password}@` : ''}${host}:${port}/${
+    database ? database : ''
+  }${authSource ? `?authSource=${authSource}` : ''}`;
+}
+
+const url = getMongoDbConnectionString();
 
 exports.copyMongoDb = (oldDbName, newDbName) => {
   return new Promise((resolve, reject) => {
@@ -59,27 +83,18 @@ exports.dbExists = (dbName) => {
 }
 
 exports.deleteDb = (dbName) => {
-
   return new Promise((resolve, reject) => {
-    MongoClient.connect(url, (err, db) => {
+    MongoClient.connect(getMongoDbConnectionString(dbName), (err, client) => {
       if (err) {
-        reject(err);
-      } else {
-        var adminDb = db.admin();
-
-        new mongodb.Db(dbName, MongoServer, {}).open(function (error, client) {
-          console.log('---> err', error);
-            if(error) callback(error);
-            // drop the database
-            client.dropDatabase(function(err, result) {
-                if(err) callback(err);
-                client.close();
-            });
-        });
-
-        db.close();
-        resolve();
+        return reject(err);
       }
+      
+      // drop the database
+      client.dropDatabase(function(err, result) {
+        client.close();
+        if (err) return reject(err);
+        resolve(result);
+      });
     });
   });
 }
@@ -106,7 +121,7 @@ exports.export = (dbName, dirname) => {
 
   return new Promise((resolve, reject) => {
 
-    let uri = url + '/' + dbName;
+    let uri = getMongoDbConnectionString(dbName);
     dirname = dirname || './tmp';
 
     mongoBackup({
@@ -125,7 +140,7 @@ exports.import = (dbName, dirname) => {
 
   return new Promise((resolve, reject) => {
 
-    let uri = url + '/' + dbName;
+    let uri = getMongoDbConnectionString(dbName);
     dirname = dirname || './tmp';
 
     mongoRestore({

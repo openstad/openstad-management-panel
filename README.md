@@ -24,6 +24,16 @@ BASIC_AUTH_PASSWORD=
 EXTERNAL_SITE_REPO=API_URL/api/repo
 FRONTEND_URL=http://cms.staging.amsterdam.nl
 PUBLIC_IP=
+
+# Mongodb connection (Must be same server as frontend service)
+MONGO_DB_HOST=localhost
+MONGO_DB_PORT=27017
+MONGO_DB_USER=''
+MONGO_DB_PASSWORD=''
+MONGO_DB_AUTHSOURCE=''
+# Override previous variables and use a connection string to connect.
+# [!!] {database} gets replaced in the application and is required to be in the connection string
+MONGO_DB_CONNECTION_STRING='mongodb://localhost:27017/{database}'
 ```
 
 #### 2. Run NPM install
