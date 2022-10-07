@@ -71,7 +71,7 @@ $(function () {
   $(".valid-domain-character").keypress(function(event) {
       var key = event.which;
       var keychar = String.fromCharCode(key).toLowerCase();
-      var allowedCharacters = "abcdefghijklmnopqrstuvwxyz0123456789-.:";
+      var allowedCharacters = "abcdefghijklmnopqrstuvwxyz0123456789-.:?&=";
 
       if ($(this).hasClass('valid-domain-character-allow-slash')) {
         allowedCharacters = allowedCharacters + '/';
@@ -89,11 +89,11 @@ $(function () {
   $(".valid-domain-character").on('input', function(event) {
     //also enfore lowercase
     var lowercaseValue = $(this).val().toLowerCase();
-    var regex = /[^a-zA-Z0-9-.:_]/g;
+    var regex = /[^a-zA-Z0-9-.:_?&=]/g;
 
 
     if ($(this).hasClass('valid-domain-character-allow-slash')) {
-      regex = /[^a-zA-Z0-9-.//:_]/g;
+      regex = /[^a-zA-Z0-9-.//:_?&=]/g;
     }
 
     // remove all chars that are not alpha numeric
