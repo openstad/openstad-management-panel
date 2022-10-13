@@ -1,7 +1,5 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
-const mongoBackup = require('mongodb-backup-4x');
-const mongoRestore = require('mongodb-restore');
 
 function getMongoDbConnectionString(database) {
   // Allow the connection string builder to be overridden by an environment variable
@@ -117,42 +115,29 @@ exports.query = (dbName, collectionName) => {
 
 }
 
-exports.export = (dbName, dirname) => {
-
-  return new Promise((resolve, reject) => {
-
-    let uri = getMongoDbConnectionString(dbName);
-    dirname = dirname || './tmp';
-
-    mongoBackup({
-      uri: uri,
-      root: dirname,
-      callback: (err, result) => {
-        resolve();
-      }
-    });
-
-
-  });
+exports.export = async (dbName, dirname) => {
+  let uri = getMongoDbConnectionString(dbName);
+  dirname = dirname || './tmp';
+  
+  const { execa } = await import('execa');
+  return await execa(`mongodump`, [
+    '--uri', uri,
+    '-o', dirname,
+    '-v'
+  ])
 }
 
-exports.import = (dbName, dirname) => {
+exports.import = async (dbName, dirname) => {
+  let uri = getMongoDbConnectionString(dbName);
+  dirname = dirname || './tmp';
 
-  return new Promise((resolve, reject) => {
-
-    let uri = getMongoDbConnectionString(dbName);
-    dirname = dirname || './tmp';
-
-    mongoRestore({
-      uri: uri,
-      root: dirname,
-      callback: (err, result) => {
-        resolve();
-      }
-    });
-
-
-  });
+  const { execa } = await import('execa')
+  return await execa(`mongorestore`, [
+    '-v',
+    '-d', dbName,
+    '--uri', uri,
+    dirname
+  ])
 }
 
 exports.editSiteTitle = (siteTitle, dbName, collectionName) => {

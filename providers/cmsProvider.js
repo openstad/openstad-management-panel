@@ -1,8 +1,11 @@
-const {createReadStream} = require('fs');
+const {createReadStream, createWriteStream} = require('fs');
 const BSON = require('bson');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 const fs = require('fs').promises;
+const BSONStream = require('bson-stream');
+const { Transform, PassThrough } = require('stream')
+const { pipeline } = require('stream/promises')
 
 const mongoService = require('../services/mongo');
 
@@ -146,25 +149,62 @@ const renameAttachments = async ({ cmsData, domain, attachmentsDir, mongoPath })
       }
     }
 
-    // replace ids in the data
-    let subdirs = await fs.readdir(mongoPath);
+    let files = [];
+
+    // Convert older export to new supported format (mongodump)
+    let subdirs = await fs.readdir(mongoPath, {
+      withFileTypes: true,
+    })
+    subdirs = subdirs.filter(file => file.isDirectory()).map(folder => folder.name);
+
     for (let subdir of subdirs) {
-      let files = await fs.readdir(`${mongoPath}/${subdir}`);
-      for (let file of files) {
-        let content = await fs.readFile(`${mongoPath}/${subdir}/${file}`);
-        content = BSON.deserialize(content);
-        content = JSON.stringify(content);
+      const collection = subdir
 
-        for (let attachmentName of Object.keys(attachmentNames)) {
-          content = content.replace( new RegExp(attachmentNames[attachmentName].oldId, 'g'), attachmentNames[attachmentName].newId );
-        }
-
-        content = JSON.parse(content);
-        content = BSON.serialize(content);
-        let err = await fs.writeFile(`${mongoPath}/${subdir}/${file}`, content);
-        if (err) throw err
-
+      let subFiles = await fs.readdir(`${mongoPath}/${subdir}`);
+      for (let file of subFiles) {
+        // concatenate bson files into single collection bson
+        const bson = createWriteStream(`${mongoPath}/${collection}.bson`, {
+          flags: 'a+', // create and append
+        });
+        await pipeline(fs.readFile(`${mongoPath}/${subdir}/${file}`), bson);
       }
+
+      // remove subdir
+      await fs.rm(`${mongoPath}/${subdir}`, {
+        recursive: true,
+        force: true,
+      });
+    }
+    
+    // replace ids in the data
+    files = await fs.readdir(`${mongoPath}`);
+    for (let file of files.filter(file => file.endsWith('.bson'))) {
+      await pipeline(
+        createReadStream(`${mongoPath}/${file}`),
+        new BSONStream(),
+        new Transform({
+          objectMode: true,
+          transform(chunk, encoding, callback) {
+            try {
+              content = JSON.stringify(chunk);
+              for (let attachmentName of Object.keys(attachmentNames)) {
+                content = content.replace(
+                  new RegExp(attachmentNames[attachmentName].oldId, 'g'),
+                  attachmentNames[attachmentName].newId
+                );
+              }
+              const serialized = BSON.serialize(JSON.parse(content));
+              callback(null, serialized);
+            } catch (err) {
+              callback(err);
+            }
+          },
+        }),
+        createWriteStream(`${mongoPath}/${file}.new`)
+      );
+
+      await fs.rm(`${mongoPath}/${file}`);
+      await fs.rename(`${mongoPath}/${file}.new`, `${mongoPath}/${file}`);
     }
 
   } catch(err) {

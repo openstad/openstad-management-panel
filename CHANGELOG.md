@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+* Add mongodb-tools to docker image (mongorestore, mongodump etc.)
+* Remove `mongodb-backup-4x` and `mongodb-restore` packages since they don't support new mongodb connectionstring
+* Refactor import and export to use `mongorestore` and `mongodump`
+
 ## v0.41.0
 * Use networking.k8s.io/v1 version for ingress
   * IMPORTANT: This requires Kubernetes version v1.19 due to switching from networking.k8s.io/v1beta1 to networking.k8s.io/v1. 
