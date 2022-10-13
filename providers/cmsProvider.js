@@ -170,7 +170,7 @@ const renameAttachments = async ({ cmsData, domain, attachmentsDir, mongoPath })
       }
 
       // remove subdir
-      await fs.rmdir(`${mongoPath}/${subdir}`, {
+      await fs.rm(`${mongoPath}/${subdir}`, {
         recursive: true,
         force: true,
       });
