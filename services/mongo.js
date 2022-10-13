@@ -122,8 +122,11 @@ exports.export = (dbName, dirname) => {
     dirname = dirname || './tmp';
 
     import(`execa`)
-      .then(({ execa }) => execa(`mongodump`, ['--uri', uri, '-o', dirname]))
-      .then(resolve)
+      .then(({ execa }) => execa(`mongodump`, ['--uri', uri, '-o', dirname, '-v']))
+      .then((result) => {
+        console.log({ mongodump: result });
+        resolve(result)
+      })
       .catch(reject)
   });
 }
@@ -136,8 +139,11 @@ exports.import = (dbName, dirname) => {
     dirname = dirname || './tmp';
 
     import(`execa`)
-      .then(({ execa }) => execa(`mongorestore`, ['--uri', uri, dirname]))
-      .then(resolve)
+      .then(({ execa }) => execa(`mongorestore`, ['--uri', uri, dirname, '-v']))
+      .then((result) => {
+        console.log({ mongorestore: result })
+        resolve(result)
+      })
       .catch(reject);
   });
 }
