@@ -139,7 +139,7 @@ exports.import = (dbName, dirname) => {
     dirname = dirname || './tmp';
 
     import(`execa`)
-      .then(({ execa }) => execa(`mongorestore`, ['--uri', uri, dirname, '-v']))
+      .then(({ execa }) => execa(`mongorestore`, ['--uri', uri, dirname, '-v', '-d', dbName]))
       .then((result) => {
         console.log({ mongorestore: result })
         resolve(result)
