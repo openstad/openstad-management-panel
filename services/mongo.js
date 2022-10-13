@@ -129,10 +129,7 @@ exports.export = (dbName, dirname) => {
             '-v'
           ])
       )
-      .then((result) => {
-        console.log({ mongodump: result });
-        resolve(result);
-      })
+      .then(resolve)
       .catch(reject);
   });
 }
@@ -146,10 +143,7 @@ exports.import = (dbName, dirname) => {
 
     import(`execa`)
       .then(({ execa }) => execa(`mongorestore`, ['-v', '-d', dbName, '--uri', uri, dirname]))
-      .then((result) => {
-        console.log({ mongorestore: result })
-        resolve(result)
-      })
+      .then(resolve)
       .catch(reject);
   });
 }
