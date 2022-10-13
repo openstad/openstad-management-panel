@@ -1,7 +1,5 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
-const mongoBackup = require('mongodb-backup-4x');
-const mongoRestore = require('mongodb-restore');
 
 function getMongoDbConnectionString(database) {
   // Allow the connection string builder to be overridden by an environment variable
@@ -120,19 +118,13 @@ exports.query = (dbName, collectionName) => {
 exports.export = (dbName, dirname) => {
 
   return new Promise((resolve, reject) => {
-
     let uri = getMongoDbConnectionString(dbName);
     dirname = dirname || './tmp';
 
-    mongoBackup({
-      uri: uri,
-      root: dirname,
-      callback: (err, result) => {
-        resolve();
-      }
-    });
-
-
+    import(`execa`)
+      .then(({ execa }) => execa(`mongodump`, ['--uri', uri, '-o', dirname]))
+      .then(resolve)
+      .catch(reject)
   });
 }
 
@@ -143,15 +135,10 @@ exports.import = (dbName, dirname) => {
     let uri = getMongoDbConnectionString(dbName);
     dirname = dirname || './tmp';
 
-    mongoRestore({
-      uri: uri,
-      root: dirname,
-      callback: (err, result) => {
-        resolve();
-      }
-    });
-
-
+    import(`execa`)
+      .then(({ execa }) => execa(`mongorestore`, [uri, dirname]))
+      .then(resolve)
+      .catch(reject);
   });
 }
 
