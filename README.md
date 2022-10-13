@@ -3,6 +3,7 @@
 ## Prerequisites
  - [Git](https://git-scm.com/)
  - [Node.js and npm](https://nodejs.org/en/)
+ - [`mongorestore` and `mongodump`](https://www.mongodb.com/docs/database-tools/installation/installation-macos/)
 
 
 #### 1. Set .env values
