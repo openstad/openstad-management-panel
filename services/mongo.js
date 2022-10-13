@@ -115,37 +115,29 @@ exports.query = (dbName, collectionName) => {
 
 }
 
-exports.export = (dbName, dirname) => {
-
-  return new Promise((resolve, reject) => {
-    let uri = getMongoDbConnectionString(dbName);
-    dirname = dirname || './tmp';
-
-    import(`execa`)
-      .then(({ execa }) =>
-        execa(`mongodump`, [
-            '--uri', uri,
-            '-o', dirname,
-            '-v'
-          ])
-      )
-      .then(resolve)
-      .catch(reject);
-  });
+exports.export = async (dbName, dirname) => {
+  let uri = getMongoDbConnectionString(dbName);
+  dirname = dirname || './tmp';
+  
+  const { execa } = await import('execa');
+  return await execa(`mongodump`, [
+    '--uri', uri,
+    '-o', dirname,
+    '-v'
+  ])
 }
 
-exports.import = (dbName, dirname) => {
+exports.import = async (dbName, dirname) => {
+  let uri = getMongoDbConnectionString(dbName);
+  dirname = dirname || './tmp';
 
-  return new Promise((resolve, reject) => {
-
-    let uri = getMongoDbConnectionString(dbName);
-    dirname = dirname || './tmp';
-
-    import(`execa`)
-      .then(({ execa }) => execa(`mongorestore`, ['-v', '-d', dbName, '--uri', uri, dirname]))
-      .then(resolve)
-      .catch(reject);
-  });
+  const { execa } = await import('execa')
+  return await execa(`mongorestore`, [
+    '-v',
+    '-d', dbName,
+    '--uri', uri,
+    dirname
+  ])
 }
 
 exports.editSiteTitle = (siteTitle, dbName, collectionName) => {
