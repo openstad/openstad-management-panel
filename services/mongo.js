@@ -136,7 +136,7 @@ exports.import = (dbName, dirname) => {
     dirname = dirname || './tmp';
 
     import(`execa`)
-      .then(({ execa }) => execa(`mongorestore`, [uri, dirname]))
+      .then(({ execa }) => execa(`mongorestore`, ['--uri', uri, dirname]))
       .then(resolve)
       .catch(reject);
   });
