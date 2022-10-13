@@ -126,8 +126,7 @@ exports.export = (dbName, dirname) => {
         execa(`mongodump`, [
             '--uri', uri,
             '-o', dirname,
-            '-v',
-            '-d', dbName
+            '-v'
           ])
       )
       .then((result) => {
