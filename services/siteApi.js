@@ -26,10 +26,10 @@ exports.fetchAll = () => {
   });
 }
 
-exports.fetchUsersOfSite = (siteId) => {
+exports.fetchAllWithIssues = (siteId) => {
   return rp({
     method: 'GET',
-    uri: `${apiUrl}/site/${siteId}/user`,
+    uri: `${apiUrl}/site/issues`,
     headers: {
         'Accept': 'application/json',
         "X-Authorization": siteApiKey
