@@ -10,10 +10,10 @@ exports.configSchema = {
 
   anonymize: [
     {
-      key: 'anonimizeUsersXDaysAfterEndDate',
+      key: 'anonymizeUsersXDaysAfterEndDate',
       type: 'number',
       default: 60,
-      label: "Anonimize users x days after the project end date"
+      label: "Anonymize users x days after the project end date"
     },
     {
       key: 'warnUsersAfterXDaysOfInactivity',
@@ -22,10 +22,10 @@ exports.configSchema = {
       label: "Warn users after x days of inactivity",
     },
     {
-      key: 'anonimizeUsersAfterXDaysOfInactivity',
+      key: 'anonymizeUsersAfterXDaysOfInactivity',
       type: 'number',
       default: 860,
-      label: "Anonimize users after x days of inactivity"
+      label: "Anonymize Users after x days of inactivity"
     },
   ],
 
