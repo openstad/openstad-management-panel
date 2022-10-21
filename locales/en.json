@@ -42,9 +42,12 @@
 	"Voting": "Voting",
 	"Password protection": "Password protection",
 	"Admin notifications": "Admin notifications",
+	"Anonymize users": "Anonymize users",
+  "Notification settings": "Notification settings",
 	"Newsletter": "Newsletter",
 	"General": "General",
 	"for ideas": "for ideas",
+	"Anonymize users now": "Anonymize users now",
 	"Thank you e-mail ": "Thank you e-mail ",
 	"Settings for Ideas": "Settings for Ideas",
 	"Settings for newsletter": "Settings for newsletter",
@@ -79,5 +82,10 @@
 	"Two Factor": "Two Factor",
 	"Configure Two Factor": "Configure Two Factor",
 	"Ingress": "Ingress",
-	"Ingress settings": "Ingress settings"
+	"Ingress settings": "Ingress settings",
+	"Anonymize users settings": "Anonymize users settings",
+	"Email to usersL account is about to expire": "Email to usersL account is about to expire",
+	"Email to users: account is about to expire": "Email to users: account is about to expire",
+	"Email to project admin: endDate is close": "Email to project admin: endDate is close",
+	"Email to project manager: endDate is close": "Email to project manager: endDate is close"
 }

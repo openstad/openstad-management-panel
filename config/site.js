@@ -1,24 +1,71 @@
 exports.configSchema = {
-  basicAuth:
-    [
-      {
-        key: 'active',
-        type: 'boolean',
-        default: false,
-        label: "Is active?"
-      },
-      {
-        key: 'user',
-        type: 'string',
-        default: 'openstad',
-        label: "Username"
-      },
-      {
-        key: 'password',
-        type: 'string',
-        default: process.env.BASIC_AUTH_DEFAULT_PW,
-        label: "Password"
-      },
+  project: [
+    {
+      key: 'endDate',
+      type: 'date',
+      default: null,
+      label: "Project end date"
+    },
+  ],
+
+  anonymize: [
+    {
+      key: 'anonymizeUsersXDaysAfterEndDate',
+      type: 'number',
+      default: 60,
+      label: "Anonymize users x days after the project end date"
+    },
+    {
+      key: 'warnUsersAfterXDaysOfInactivity',
+      type: 'number',
+      default: 770,
+      label: "Warn users after x days of inactivity",
+    },
+    {
+      key: 'anonymizeUsersAfterXDaysOfInactivity',
+      type: 'number',
+      default: 860,
+      label: "Anonymize Users after x days of inactivity"
+    },
+  ],
+
+  inactiveWarningEmail: [
+    {
+      parentKey: 'anonymize',
+      key: 'subject',
+      type: 'string',
+      default: '',
+      label: 'Subject line'
+    },
+    {
+      parentKey: 'anonymize',
+      key: 'template',
+      type: 'string',
+      default: '',
+      textarea: true,
+      label: 'Template (variables available)'
+    },
+  ],
+
+  basicAuth: [
+    {
+      key: 'active',
+      type: 'boolean',
+      default: false,
+      label: "Is active?"
+    },
+    {
+      key: 'user',
+      type: 'string',
+      default: 'openstad',
+      label: "Username"
+    },
+    {
+      key: 'password',
+      type: 'string',
+      default: process.env.BASIC_AUTH_DEFAULT_PW,
+      label: "Password"
+    },
   ],
   ideas:  [
     {
@@ -85,7 +132,6 @@ exports.configSchema = {
       label: "Display deprecated widgets?"
     },
   ],
-
   cms: [{
     key: 'redirectURI',
     type: 'string',
@@ -141,10 +187,10 @@ exports.configSchema = {
   ],
   notifications : [
     {
-      key: 'to',
+      key: 'fromAddress',
       type: 'string',
       default: '',
-      label: 'To e-mail address',
+      label: 'From e-mail address',
       trim: true,
       validation: [
         {
@@ -154,10 +200,23 @@ exports.configSchema = {
       ]
     },
     {
-      key: 'from',
+      key: 'projectmanagerAddress',
       type: 'string',
       default: '',
-      label: 'From e-mail address',
+      label: 'Projectmanager email address',
+      trim: true,
+      validation: [
+        {
+          name: 'pattern',
+          value: /.*/ // email is almost impossible to validate with a regex
+        }
+      ]
+    },
+    {
+      key: 'siteadminAddress',
+      type: 'string',
+      default: '',
+      label: 'Site Admin email address',
       trim: true,
       validation: [
         {

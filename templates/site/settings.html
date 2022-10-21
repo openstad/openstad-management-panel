@@ -48,6 +48,21 @@
         </form>
       </div>
 
+      <div class="card card-openstad">
+        <form method="POST" action="/admin/site/{{site.id}}">
+          <div class="form-group row">
+            <label class="col-form-label col-sm-4" for="">Project end date</label>
+            <div class="col-sm-8">
+              <input class="form-control valid-domain-character valid-domain-character-allow-slash" placeholder="" type="date" name="config[project][endDate]" value="{{site.config.project.endDate}}">
+            </div>
+          </div>
+          <div class="form-buttons-w">
+            <button class="btn btn-outline-primary" type="submit">Opslaan</button>
+          </div>
+          <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        </form>
+      </div>
+
 {#
       <div class="card card-openstad">
         <form method="POST" action="/admin/site/{{site.id}}">
@@ -139,18 +154,6 @@
         </form>
       </div>
 
-    </div>
-
-    <div class="card card-openstad">
-      <div style="margin-bottom: 8px;">
-        Let op! Deze actie is definitief en kan niet ongedaan gemaakt worden.<br/>
-        Het project moet eerst aangemerkt staan als ‘beëindigd’ voordat deze actie uitgevoerd kan worden.<br/>
-      </div>
-      <form method="POST" action="/admin/site/{{site.id}}/anonymize">
-        <button class="btn btn-danger" type="submit" onclick="return confirm('{{__('Sure? It can not be undone')}}')" {{ 'disabled' if isDefaultSite }} >Gebruikersgegevens anonimiseren</button>
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-      </form>
-      {% if isDefaultSite %} <em> Cannot delete the default site </em> {% endif %}
     </div>
 
     <div class="card card-openstad">

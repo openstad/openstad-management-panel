@@ -1,0 +1,143 @@
+{% extends 'layout.html' %}
+
+{% block sideMenu %}
+{% include 'partials/overview-menu.html' %}
+{% endblock %}
+
+{% block quickLinks %}
+{% endblock %}
+
+{% block body %}
+
+<style>
+ .sitesIssuesFilter, .sitesIssuesFilter:hover {
+   color: black;
+   background-color: white;
+ }
+</style>
+<script>
+ window.addEventListener('load', (event) => {
+   var table = $('#dataTable1').DataTable({
+     initComplete: function () {
+       var api = this.api();
+       $('#dataTable1').dataTable().api().columns([3]).every(function () {
+         var column = this;
+         var select = $('<select class="btn btn-primary sitesIssuesFilter" style="width: 80%"><option value="">Filter</option></select>')
+           .appendTo($(column.header()))
+           .on('change', function () {
+             var val = $.fn.dataTable.util.escapeRegex(
+               $(this).val()
+             );
+             column.search(val ? '' + val + '' : '', true, false).draw();
+           });
+         {% for issue in issues %}
+         select.append('<option value="{{issue.description}}">{{issue.description}} ({{issue.count}})</option>')
+         {% endfor %}
+       });
+     }
+   });
+ });
+</script>
+
+<div class="row">
+  <div class="col-sm-12 col-xxxl-12">
+    <div class="element-wrapper">
+
+      {# for issue in issues }
+      <div style="float:right; margin-left: 15px;">
+        {{issue.description}} ({{issue.count}})
+      </div>
+      {% endfor #}
+
+      <h3 class="section-header">
+        Sites
+      </h3>
+      <div class="card card-openstad">
+        <div class="table-responsive">
+          <table id="dataTable1" class="table table-lightborder">
+            <thead>
+              <tr>
+                <!--   <th>
+                     ID
+                     </th>!-->
+                <th>
+                  Site
+                </th>
+                <th>
+                  Domain
+                </th>
+                <th>
+                  Created at
+                </th>
+                <!--    <th>
+                     Products
+                     </th> !-->
+                <th>
+                </th>
+                <th class="text-left">
+                  Number of users that<br/>should have been anonymized
+                </th>
+                <th>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for site in sites %}
+              {% if site.config.cms.dbName %}
+              <tr>
+                <!--    <td class="nowrap">
+                     #{{site.id}}
+                     </td>!-->
+                <td>
+                  {{site.title}}
+                </td>
+                <td >
+                  <span style="
+                  word-break: break-all;
+                  min-width: 170px;
+                  display: block;
+                  font-size: 11px;
+                  ">
+                    {% if site.config.cms.url %}
+                    <a href="{{site.config.cms.url}}" target="_blank">{{site.domain}}</a>
+                    {% else %}
+                    {{site.domain}}
+                    {% endif %}
+                  </span>
+                </td>
+                <td >
+                  {{site.createdAt}}
+                </td>
+                <td class="text-left">
+                  <div class="" style="color: red;" data-title="Issue" data-toggle="tooltip">
+                    <strong>{{site.issue}}</strong>
+                  </div>
+                </td>
+                <td class="text-left">
+                  <div class="" data-title="Issue" data-toggle="tooltip">
+                    {{site.userCount or 'N/A'}}
+                  </div>
+                </td>
+                <td class="text-right">
+                  {% if site.config.cms.dbName %}
+                  <a class="btn btn-light " href="/admin/site/{{site.id}}">
+                    <span>beheer</span>
+                  </a>
+                  <br />
+                  <a class="btn btn-link btn-sm" href="/admin/site/{{site.id}}/beta">
+                    <small><span>beheer (beta)</span></small>
+                  </a>
+                  {% endif %}
+                </td>
+
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

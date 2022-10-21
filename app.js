@@ -210,6 +210,7 @@ require('./routes/site/uniqueCode')(app);
 require('./routes/site/user-api')(app);
 require('./routes/site/votes')(app);
 require('./routes/site/newsletter.js')(app);
+require('./routes/site/sites-with-issues')(app);
 require('./routes/user')(app);
 require('./routes/server')(app);
 require('./routes/site/idea')(app);
