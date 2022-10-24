@@ -29,34 +29,6 @@ function getMongoDbConnectionString(database) {
 
 const url = getMongoDbConnectionString();
 
-exports.copyMongoDb = (oldDbName, newDbName) => {
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(url, function(err, db) {
-      if (err) {
-        reject(err);
-      } else {
-        var mongoCommand = {
-          copydb: 1,
-          fromhost: "localhost",
-          fromdb: oldDbName,
-          todb: newDbName
-        };
-        var admin = db.admin();
-
-        admin.command(mongoCommand, function(commandErr, data) {
-          if (!commandErr) {
-            console.log(data);
-            resolve(data)
-          } else {
-            reject(commandErr.errmsg);
-          }
-          db.close();
-        });
-      }
-    });
-  });
-}
-
 exports.dbExists = (dbName) => {
 
   return new Promise((resolve, reject) => {
