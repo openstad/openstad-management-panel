@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+
+{% block sideMenu %}
+{% include 'partials/overview-menu.html' %}
+{% endblock %}
+
+{% block quickLinks %}
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-sm-12 col-xxxl-12">
+    <div class="element-wrapper">
+      <h3 class="section-header">
+        Locks
+      </h3>
+      <div style="padding-left: 35px; padding-bottom: 20px;">
+        De API voert een aantal taken automatisch uit. Om te voorkomen dat er meerdere dezelfde processen tegelijk worden uitgevoerd, worden zgn. 'locks' aangemaakt.<br/>
+        Wanneer er iets mis gaat in zo'n automatisch proces, dan kan het gebeuren dat zo'n lock niet wordt verwijderd, en het automatische proces niet meer wordt opgestart.<br/>
+        <br/>
+        Op deze plaats kan zo'n lock dan worden verwijderd. Zolang alles goed gaat is deze lijst dus leeg.<br/>
+      </div>
+      <div class="card card-openstad">
+        <div class="table-responsive">
+          <table id="dataTable1" class="table table-lightborder">
+            <thead>
+              <tr>
+                <th>
+                  Lock
+                </th>
+                <th>
+                  Created at
+                </th>
+                <th>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for lock in locks %}
+              <tr>
+                <td>
+                  {{lock.type}}
+                </td>
+                <td >
+                  {{lock.createdAtHumanized}}
+                </td>
+                <td class="text-right">
+                  <a class="btn btn-danger" href="/admin/locks/{{lock.id}}/delete">
+                    <span>delete</span>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
