@@ -253,7 +253,7 @@ module.exports = function(app){
         if (err) throw err;
 
         // collect data
-        const newSite = new NewSite(domain, '', req.body.fromEmail, req.body.fromName);
+        const newSite = new NewSite(domain, '', req.body.fromEmail, req.body.fromName, req.body.endDate);
         const siteData = await openstadSiteDataService.collectDataFromFiles(importDir);
         newSite.title = req.body.siteName;
 
