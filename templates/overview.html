@@ -120,6 +120,16 @@
                   </div>
                   {% endif %}
 
+                  {% if site.config.project.projectHasEnded %}
+                  <div class="badge badge-pill badge-success" style="background: #862eb3; width: 180px; " data-title="CMS" data-toggle="tooltip">
+                    Project has ended
+                  </div>
+                  {% else %}
+                  <div class="badge badge-pill badge-success" style="background: #c7c7c7; width: 180px; " data-title="CMS" data-toggle="tooltip">
+                    Project hasn't ended (yet)
+                  </div>
+                  {% endif %}
+
 
                 </td>
                 <td class="text-right">
