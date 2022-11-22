@@ -1,9 +1,21 @@
 # Changelog
 
-## Unreleased
+## 1.0.0
 * Add mongodb-tools to docker image (mongorestore, mongodump etc.)
 * Remove `mongodb-backup-4x` and `mongodb-restore` packages since they don't support new mongodb connectionstring
 * Refactor import and export to use `mongorestore` and `mongodump`
+* Anonymize site users
+* Add endDate to nNew Site form
+* Add labels for endDate and projectHasEnded to site overview
+* Remove Mongo 4.2 dependency
+* Copy users and rights when copying site (optional)
+* Upgrade to node 16
+* Move k8s to networking-io-v1
+* Bugfix: env FORCE_HTTP
+* Bugfix: timing of flash messages
+* Add email validation
+* Add email header images in authentication
+
 
 ## v0.41.0
 * Use networking.k8s.io/v1 version for ingress
