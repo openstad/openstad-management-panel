@@ -13,7 +13,7 @@ const protocol = process.env.FORCE_HTTP ? 'http' : 'https';
  * @param fromEmail
  * @param fromName
  */
-module.exports = function NewSite(domain, title, fromEmail, fromName) {
+module.exports = function NewSite(domain, title, fromEmail, fromName, endDate) {
   console.log('domain in new site', domain);
 
   const uniqueSiteId = Math.round(new Date().getTime() / 1000) + domain.replace(/\W/g, '').slice(0,40);
@@ -32,6 +32,7 @@ module.exports = function NewSite(domain, title, fromEmail, fromName) {
   this.contactEmail = fromEmail;
   this.fromName = fromName;
   this.title = title;
+  this.endDate = endDate;
 
   this.getUniqueSiteId = () => this.uniqueSiteId;
   this.getBaseDomain = () => formatBaseDomain(this.domain);
@@ -43,4 +44,5 @@ module.exports = function NewSite(domain, title, fromEmail, fromName) {
   this.getFormattedFromEmail = () => this.formattedFromEmail;
   this.getFromName = () => this.fromName;
   this.getTitle = () => this.title;
+  this.getEndDate = () => this.endDate || null;
 };

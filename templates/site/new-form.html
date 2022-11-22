@@ -95,29 +95,49 @@
       </div>
 
       <div class="onboarding-slide">
-        <h4 class="onboarding-title">
-          Gebruikers en rechten
-        </h4>
-
-        <div class="form-group row">
-          <div class="col-sm-12">
-            <input id="ch-enable-site-selection" type="checkbox" name="copyUsers" />
-            <label for="ch-enable-site-selection">
-              Kopieer gebruikers en rechten van een andere site
-            </label>
-          </div>  
-        </div>
-
-        <div>
-          <select id="create-form-combobox-for-sites" class="select2-select-site" style="width: 100%;" name="siteIdToCopy">
-            {% for site in sites %}
+        <div class="onboarding-side-by-side">
+          <h4 class="onboarding-title">
+            Gebruikers en rechten
+          </h4>
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <input id="ch-enable-site-selection" type="checkbox" name="copyUsers" />
+              <label for="ch-enable-site-selection">
+                Kopieer gebruikers en rechten van een andere site
+              </label>
+            </div>  
+          </div>
+          <div>
+            <select id="create-form-combobox-for-sites" class="select2-select-site" style="width: 100%;" name="siteIdToCopy">
+              {% for site in sites %}
               <option value="{{ site.id }}">{{ site.title }}</option>
-            {% endfor %}
-          </select>
+              {% endfor %}
+            </select>
+          </div>
         </div>
+      </div>
 
-    </div>
-      
+      <div class="onboarding-slide">
+        <div class="onboarding-side-by-side">
+          <div class="onboarding-media">
+            <img alt="" src="/img/bigicon2.png" width="200px">
+          </div>
+          <div class="onboarding-content with-gradient">
+            <h4 class="onboarding-title">
+              Einddatum
+            </h4>
+            <div class="onboarding-text" style="margin-bottom: 6px;">
+              Zet de einddatum van het project. Op basis hiervan worden waarschuwingen verstuurd naaar de projectleider.
+            </div>
+            <div>
+              <div class="form-group">
+                <input class="form-control valid-domain-character valid-domain-character-allow-slash" placeholder="" type="date" name="endDate">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="onboarding-slide">
         <div class="onboarding-side-by-side">
           <div class="onboarding-media">
@@ -159,7 +179,6 @@
                 </div>
               </div>
             </div>
-
             <div >
               <div class="form-group">
                 <button type="submit" class="mr-2 mb-2 btn btn-outline-primary " >
@@ -170,6 +189,7 @@
           </div>
         </div>
       </div>
+      
     </div>
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
   </form>

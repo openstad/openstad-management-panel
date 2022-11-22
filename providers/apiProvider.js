@@ -39,6 +39,9 @@ exports.createSite = async (newSite, site, oauthClients) => {
       user: 'openstad_' + Math.random().toString(36).slice(-3),
       password: Math.random().toString(36).slice(-10),
     },
+    "project": {
+      "endDate": newSite.getEndDate(),
+    },
     cms: {
       dbName: newSite.getCmsDatabaseName(),
       url: newSite.getDomainWithProtocol(),
