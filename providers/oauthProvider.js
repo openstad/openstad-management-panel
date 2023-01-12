@@ -140,14 +140,28 @@ exports.copyUsersFromSite = async (oldSiteId, newSiteId) => {
   const oldClient = await userClientApi.fetch(oldClientId, true, []);
   const usersOfOldSite = oldClient.userRoles;
 
+  console.log({oldSite});
+  console.log({oldSiteOauthConfig: oldSite.config.oauth});
+
+  console.log({oldClientId});
+  console.log({oldClient});
+  console.log({usersOfOldSite});
+
   const newSite = await siteApi.fetch(newSiteId);
   const newClientId = newSite.config?.oauth?.default?.id;
-  
+ 
   const requests = usersOfOldSite.map((userRole) => {
     console.log(`Adding userrole to client with id: ${newClientId}, userId: ${userRole.userId} and roleId: ${userRole.roleId}`);
-    let body = {roles:{}};
-    body.roles[newClientId] = userRole.roleId;
-    return userApi.update(userRole.userId, body);
+
+    try {
+      let body = {roles:{}};
+      body.roles[newClientId] = userRole.roleId;
+      return userApi.update(userRole.userId, body);
+    } catch(error) {
+      console.log({error});
+      throw error;
+    }
+    
   });
   await Promise.all(requests)
 };
