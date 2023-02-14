@@ -163,6 +163,54 @@ exports.configSchema = {
       label: 'Template (variables available)'
     },
   ],
+  conceptEmail: [
+    {
+      parentKey: 'ideas',
+      key: 'from',
+      type: 'string', // todo: add type email/list of emails
+      default: '',
+      label: "From Address"
+    },
+    {
+      parentKey: 'ideas',
+      key: 'subject',
+      type: 'string',
+      default: '',
+      label: 'Subject line'
+    },
+    {
+      parentKey: 'ideas',
+      key: 'template',
+      type: 'string',
+      default: '',
+      textarea: true,
+      label: 'Template (variables available)'
+    },
+  ],
+  conceptToPublishedEmail: [
+    {
+      parentKey: 'ideas',
+      key: 'from',
+      type: 'string', // todo: add type email/list of emails
+      default: '',
+      label: "From Address"
+    },
+    {
+      parentKey: 'ideas',
+      key: 'subject',
+      type: 'string',
+      default: '',
+      label: 'Subject line'
+    },
+    {
+      parentKey: 'ideas',
+      key: 'template',
+      type: 'string',
+      default: '',
+      textarea: true,
+      label: 'Template (variables available)'
+    },
+  ],
   categories: [
     {
       key: 'themes',

@@ -45,6 +45,45 @@
         {% include 'site/settings/modal-thankyou-email.html' %}
       </div>
 
+
+      <div class="card card-openstad">
+
+        <form method="POST" action="/admin/site/{{site.id}}">
+          <fieldset>
+              <legend><span>{{ __('Submitted a concept plan e-mail ') }}</span></legend>
+              {{ renderFields(siteConfigSchema.conceptEmail, site.config.ideas.conceptEmail, 'config[conceptEmail]') }}
+
+              <button class="btn btn-secondary" data-target="#ideaConceptThankYouModal" data-toggle="modal" type="button">More info on the E-mail Template</button>
+
+              <div class="form-buttons-w">
+              <button class="btn btn-outline-primary" type="submit">Opslaan</button>
+              </div>
+            </fieldset>
+          <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        </form>
+
+        {% include 'site/settings/modal-thankyou-concept-email.html' %}
+      </div>
+
+
+      <div class="card card-openstad">
+
+        <form method="POST" action="/admin/site/{{site.id}}">
+          <fieldset>
+              <legend><span>{{ __('Published a concept plan e-mail ') }}</span></legend>
+              {{ renderFields(siteConfigSchema.conceptToPublishedEmail, site.config.ideas.conceptToPublishedEmail, 'config[conceptToPublishedEmail]') }}
+
+              <button class="btn btn-secondary" data-target="#ideaConceptToPublishedModal" data-toggle="modal" type="button">More info on the E-mail Template</button>
+
+              <div class="form-buttons-w">
+              <button class="btn btn-outline-primary" type="submit">Opslaan</button>
+              </div>
+            </fieldset>
+          <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        </form>
+
+        {% include 'site/settings/modal-concept-to-published-email.html' %}
+      </div>
       </div>
     </div>
   </div>
