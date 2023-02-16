@@ -1,4 +1,3 @@
-const Site              = require('../models').Site;
 const siteApiService    = require('../services/siteApi');
 const moment            = require('moment-timezone');
 const cacheLifespan     = 10*60;   // set lifespan of 5 minutes;
