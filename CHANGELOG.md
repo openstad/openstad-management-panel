@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1
+Remove bookshelf, kenx and mysql
+
 ## 1.0.0
 * Add mongodb-tools to docker image (mongorestore, mongodump etc.)
 * Remove `mongodb-backup-4x` and `mongodb-restore` packages since they don't support new mongodb connectionstring
