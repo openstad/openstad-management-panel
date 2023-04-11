@@ -19,17 +19,17 @@ exports.contructReactAdminCdn = async function () {
       if (!version) {
         // fallback
         let packageFile =
-          fs.readFileSync(`${__dirname}/package.json`).toString() || '';
+          await fs.readFile(`${__dirname}/../package.json`).toString() || '';
         let match =
           packageFile &&
           packageFile.match(
             /"openstad-react-openstadComponentsCdn":\s*"(?:[^"\d]*)((?:\d+\.)*\d+)"/
           );
-        version = (match && match[1]) || null;
+        version = (match && match[1]) || '';
       }
       openstadReactAdminCdn = openstadReactAdminCdn.replace(
-        '{version}',
-        version
+        '@{version}',
+        version ? `@${version}` : ''
       );
     } catch (err) {
       console.log('Error constructing cdn url', err);
