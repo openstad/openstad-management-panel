@@ -60,6 +60,12 @@ exports.createSite = async (newSite, site, oauthClients) => {
     ideas: {
       feedbackEmail: {
         from: newSite.getFormattedFromEmail(),
+      },
+      conceptEmail: {
+        from: newSite.getFormattedFromEmail(),
+      },
+      conceptToPublishedEmail: {
+        from: newSite.getFormattedFromEmail(),
       }
     },
     newslettersignup: {
