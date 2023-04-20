@@ -1,0 +1,99 @@
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="ideaConceptToPublishedModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          E-mail Template
+        </h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+      </div>
+      <div class="modal-body">
+        <p>
+        The e-mail template can be written in html, variable are rendered with the templating engine nunjucks.
+        Certain variables are present. The can be used as follows: {% raw %}{{variable}}{% endraw %}
+        </p>
+        <p>
+          Following variables are available:
+          <table class="table">
+            <tr>
+              <td>
+                 <b> user.fullName </b>
+              </td>
+              <td>
+                  Fullname of user submitted the idea
+              </td>
+            </tr>
+            <tr>
+              <td>
+                 <b> URL </b>
+              </td>
+              <td>
+                 The url of the website the idea was submitted to
+              </td>
+            </tr>
+            <tr>
+              <td>
+                 <b> HOST </b>
+              </td>
+              <td>
+                 The website, without www, the which idea was submitted to.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                 <b> idea.id </b>
+              </td>
+              <td>
+                 The id of a submitted idea
+              </td>
+            </tr>
+            <tr>
+              <td>
+                 <b> idea.title </b>
+              </td>
+              <td>
+                 The title of a submitted idea
+              </td>
+            </tr>
+
+          </table>
+          <br />
+        <p>
+        This is an example template:
+        </p>
+        <textarea class="form-control" style="min-height: 400px;">{% raw %}<h4> Beste {{user.fullName | default('indiener')}},
+          <br /><br />
+          Bedankt voor aanpassen van uw concept naar een definitief plan op <a href="{{URL}}">{{SITENAME}}</a>.. Uw plan is goed ontvangen.
+          
+          Houd de site van {{HOSTNAME}} in de gaten voor meer informatie over het project. Mocht u nog vragen hebben, stuur dan een e-mail naar {{EMAIL}}.
+          <br />
+          <br />
+            <p>
+                Hartelijke groet,<br />
+                <strong>Team {{SITENAME}}</strong>
+            </p>
+</p>{% endraw %}</textarea>
+        <br />
+        <h3> How to link to the page of submitted idea? </h3>
+        You can add a link to your website on the page where submissions are shown and add the ID to it.
+        For instance for westbegroot.nl has the plan page for submission so a link to the page of a submitted idea is structured as follows:
+        https://www.westbegroot.nl/plan/10
+        This a working example for Westbegroot.nl:
+        <textarea class="form-control" style="min-height: 150px;">{% raw %}<a href="https://www.westbegroot.nl/plan/{{idea.id}}">
+        {{idea.title}}
+</a>{% endraw %}</textarea>
+        <br />
+        <h3> How to add an image? </h3>
+        If you upload an image to the CMS and get the url. For instance header image:
+        https://westbegroot.amsterdam.nl/uploads/attachments/ck07xgjwz00pa2u3w6yvaclno-wb2020-headerfoto-2x-v2.full.png
+        Make sure image are not too big, preferably around twice the size it's displayed in the email.
+        Setting width="560" will make the image stretch full width for old email clients, newer ones support 100% which makes the image responsive.
+
+        <textarea class="form-control" style="min-height: 200px;">{% raw %}<img src="https://westbegroot.amsterdam.nl/uploads/attachments/ck07xgjwz00pa2u3w6yvaclno-wb2020-headerfoto-2x-v2.full.png" width="560" style="display:block;width:100%">{% endraw %}</textarea>
+      </div>
+        <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+      </div>
+    </div>
+  </div>
+</div>
