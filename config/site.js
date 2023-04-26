@@ -156,6 +156,13 @@ exports.configSchema = {
     },
     {
       parentKey: 'ideas',
+      key: 'inzendingPath',
+      type: 'string',
+      default: '/PATH/NAAR/INGEDIEND/PLAN/[[ideaId]]',
+      label: 'inzendingPath: /page/[[ideaId]]'
+    },
+    {
+      parentKey: 'ideas',
       key: 'template',
       type: 'string',
       default: '',
@@ -180,6 +187,13 @@ exports.configSchema = {
     },
     {
       parentKey: 'ideas',
+      key: 'inzendingPath',
+      type: 'string',
+      default: '/PATH/NAAR/INGEDIEND/PLAN/[[ideaId]]',
+      label: 'inzendingPath: /page/[[ideaId]]'
+    },
+    {
+      parentKey: 'ideas',
       key: 'template',
       type: 'string',
       default: '',
@@ -201,6 +215,13 @@ exports.configSchema = {
       type: 'string',
       default: '',
       label: 'Subject line'
+    },
+    {
+      parentKey: 'ideas',
+      key: 'inzendingPath',
+      type: 'string',
+      default: '/PATH/NAAR/INGEDIEND/PLAN/[[ideaId]]',
+      label: 'inzendingPath: /page/[[ideaId]]'
     },
     {
       parentKey: 'ideas',
