@@ -24,7 +24,6 @@
     "basic-auth": "^2.0.1",
     "body-parser": "^1.18.3",
     "bson": "^4.4.1",
-    "bson-stream": "0.0.8",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.4",
     "csurf": "^1.11.0",

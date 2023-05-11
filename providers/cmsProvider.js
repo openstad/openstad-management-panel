@@ -3,7 +3,7 @@ const BSON = require('bson');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 const fs = require('fs').promises;
-const BSONStream = require('bson-stream');
+const BSONStream = require('../utils/bson-stream');
 const { Transform, PassThrough } = require('stream')
 const { pipeline } = require('stream/promises')
 
@@ -188,6 +188,7 @@ const renameAttachments = async ({ cmsData, domain, attachmentsDir, mongoPath })
             try {
               content = JSON.stringify(chunk);
               for (let attachmentName of Object.keys(attachmentNames)) {
+                console.log('---', attachmentNames[attachmentName].oldId, attachmentNames[attachmentName].newId);
                 content = content.replace(
                   new RegExp(attachmentNames[attachmentName].oldId, 'g'),
                   attachmentNames[attachmentName].newId
