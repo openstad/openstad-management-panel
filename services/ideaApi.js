@@ -1,74 +1,115 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.API_URL;
 const siteApiKey =  process.env.SITE_API_KEY;
 
-exports.fetch = (token, siteId) => {
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/site/${siteId}`,
-    headers: {
+exports.fetch = async(token, siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${siteId}`, {
+      headers: {
         'Accept': 'application/json',
-        //'Authorization' : `Bearer ${token}`,
+        'Content-type': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  })
-//.then(response => response.json());
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.create = (token, siteId, body) => {
-  const options = {
-      uri:  `${apiUrl}/api/site/${siteId}/idea`,
+exports.create = async(token, siteId, body) => {
+
+  try {
+    let response = await fetch( `${apiUrl}/api/site/${siteId}/idea`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        "X-Authorization": siteApiKey
+      },
       method: 'POST',
+      body: JSON.stringify(body),
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
+}
+
+exports.fetchAll = async(token, siteId) => {
+
+  try {
+    let response = await fetch( `${apiUrl}/api/site/${siteId}/idea`, {
       headers: {
-          'Accept': 'application/json',
-        //"X-Authorization" : ` Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
         "X-Authorization": siteApiKey
       },
-      body: body, //JSON.stringify(body),
-      json: true // Automatically parses the JSON string in the response
-  };
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
 
-  return rp(options);
 }
 
-exports.fetchAll = (token, siteId) => {
-  return rp({
-    method: 'GET',
-    uri:  `${apiUrl}/api/site/${siteId}/idea`,
-    headers: {
-        'Accept': 'application/json',
-      //  'Authorization' : `Bearer ${token}`,
-        "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
-}
+exports.delete = async(token, siteId, ideaId) => {
 
-exports.delete = (token, siteId, ideaId) => {
-  return rp({
-     method: 'DELETE',
-      uri:  apiUrl + `/api/site/${siteId}/idea/${ideaId}`,
+  try {
+    let response = await fetch( apiUrl + `/api/site/${siteId}/idea/${ideaId}`, {
       headers: {
-          'Accept': 'application/json',
-        //  "X-Authorization" : ` Bearer ${token}`,
-          "X-Authorization": siteApiKey
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        "X-Authorization": siteApiKey
       },
-      json: true // Automatically parses the JSON string in the response
-  });
+      method: 'DELETE',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.update = (token, siteId, data) => {
-  console.log('update.:', token, siteId, data.extraData);
-  return rp({
-    method: 'PUT',
-    uri: `${apiUrl}/api/site/${siteId}/idea/${data.id}`,
-    headers: {
+exports.update = async(token, siteId, data) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${siteId}/idea/${data.id}`, {
+      headers: {
         'Accept': 'application/json',
-      //  'Authorization' : `Bearer ${token}`,
+        'Content-type': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    body: data,
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }

@@ -1,4 +1,4 @@
-const rp                  = require('request-promise');
+const fetch = require('node-fetch');
 
 //middleware
 const ideaMw            = require('../../middleware/idea');
@@ -29,30 +29,35 @@ module.exports = function(app) {
    * Used for invalidating real or test votes
    */
   app.get('/admin/site/:siteId/vote/:voteId/toggle',
-    (req, res, next) => {
-      const options = {
-          uri: `${apiUrl}/api/site/${req.params.siteId}/vote/${req.params.voteId}/toggle`,
-          headers: {
-              'Accept': 'application/json',
-              "X-Authorization": process.env.SITE_API_KEY
-          },
-          json: true // Automatically parses the JSON string in the response
-      };
+    async (req, res, next) => {
 
-      rp(options)
-        .then(function (votes) {
-          req.flash('success', { msg: 'Updated!'});
-          req.session.save( () => {
-            res.redirect(req.header('Referer')  || appUrl);
-            next();
-          });
+      try {
+        let response = await fetch(`${apiUrl}/api/site/${req.params.siteId}/vote/${req.params.voteId}/toggle`, {
+          headers: {
+            'Accept': 'application/json',
+            "X-Authorization": process.env.SITE_API_KEY
+          },
+          method: 'GET',
         })
-        .catch(function (err) {
-          req.flash('error', { msg: 'Something whent wrong!'});
-          req.session.save( () => {
-            res.redirect(req.header('Referer')  || appUrl);
-            next();
-          });
+        if (!response.ok) {
+          console.log(response);
+          throw new Error('Fetch failed')
+        }
+
+        req.flash('success', { msg: 'Updated!'});
+        req.session.save( () => {
+          res.redirect(req.header('Referer')  || appUrl);
+          return next();
         });
-  });
+
+      } catch(err) {
+        console.log(err);
+        req.flash('error', { msg: 'Something whent wrong!'});
+        req.session.save( () => {
+          res.redirect(req.header('Referer')  || appUrl);
+          return next();
+        });
+      }
+
+    });
 }

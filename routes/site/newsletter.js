@@ -1,7 +1,5 @@
 const slugify             = require('slugify');
 const nestedObjectAssign  = require('nested-object-assign');
-const Promise             = require("bluebird");
-const rp                  = require('request-promise');
 const { Parser }          = require('json2csv');
 
 //middleware

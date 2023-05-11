@@ -1,47 +1,51 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.API_URL;
 const siteApiKey =  process.env.SITE_API_KEY;
 
-exports.allForSite = (req, res, next) => {
-  var options = {
-      uri: `${apiUrl}/api/site/${req.params.siteId}/idea?includeUser=1&includeVoteCount=1&includeUserVote=1`,
+exports.allForSite = async(req, res, next) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${req.params.siteId}/idea?includeUser=1&includeVoteCount=1&includeUserVote=1`, {
       headers: {
-          'Accept': 'application/json',
-          "X-Authorization": siteApiKey
+        'Accept': 'application/json',
+        "X-Authorization": siteApiKey
       },
-      json: true // Automatically parses the JSON string in the response
-  };
-
-
-  rp(options)
-    .then(function (ideas) {
-       req.ideas = ideas;
-       res.locals.ideas = ideas;
-       next();
+      method: 'GET',
     })
-    .catch(function (err) {
-      next();
-    });
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    let ideas =  await response.json();
+    req.ideas = ideas;
+    res.locals.ideas = ideas;
+    return next();
+  } catch(err) {
+    return next();
+  }
+
 }
 
-exports.oneForSite  = (req, res, next) => {
-  var options = {
-      uri: `${apiUrl}/api/site/${req.params.siteId}/idea/${req.params.ideaId}?includeUser=1&includeVoteCount=1&includeUserVote=1`,
-      headers: {
-          'Accept': 'application/json',
-          "X-Authorization": siteApiKey
-  //         "Authorization" : auth
-      },
-      json: true // Automatically parses the JSON string in the response
-  };
+exports.oneForSite  = async(req, res, next) => {
 
-  rp(options)
-    .then(function (idea) {
-      req.idea = idea;
-      res.locals.idea = idea;
-      next();
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${req.params.siteId}/idea/${req.params.ideaId}?includeUser=1&includeVoteCount=1&includeUserVote=1`, {
+      headers: {
+        'Accept': 'application/json',
+        "X-Authorization": siteApiKey
+      },
+      method: 'GET',
     })
-    .catch(function (err) {
-      next();
-    });
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    let idea = await response.json();
+    req.idea = idea;
+    res.locals.idea = idea;
+    return next();
+  } catch(err) {
+    return next();
+  }
+
 }

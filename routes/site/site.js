@@ -1,5 +1,4 @@
 const slugify           = require('slugify');
-const Promise           = require("bluebird");
 const fs                = require('fs').promises;
 const tar               = require('tar');
 const fetch             = require('node-fetch');

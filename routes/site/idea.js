@@ -138,7 +138,6 @@ module.exports = function(app){
           req.flash('success', { msg: 'Aangemaakt!'});
           req.session.save( () => {
             res.redirect(`/admin/site/${req.params.siteId}/ideas`);
-            res.redirect(redirectTo);
           });
         })
         .catch(function (err) {
