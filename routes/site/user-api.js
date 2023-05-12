@@ -1,5 +1,4 @@
 const nestedObjectAssign  = require('nested-object-assign');
-const Promise             = require("bluebird");
 
 //middleware
 const userClientMw      = require('../../middleware/userClient');

@@ -1,7 +1,5 @@
 const slugify             = require('slugify');
 const nestedObjectAssign  = require('nested-object-assign');
-const Promise             = require("bluebird");
-const rp                  = require('request-promise');
 const { Parser }          = require('json2csv');
 
 //middleware
@@ -25,7 +23,6 @@ const siteConfigFields  = [{key: 'basicAuth'}];
 
 const authFields                  = [{key: 'name'}, {key: 'requiredUserFields'}, {key: 'authTypes'}];
 const deleteMongoDb               = require('../../services/mongo').deleteDb;
-const dbExists                    = require('../../services/mongo').dbExists;
 const userApiSettingFields        = require('../../config/auth').userApiSettingFields;
 const userApiRequiredFields       = require('../../config/auth').userApiRequiredFields;
 const siteConfigSchema            = require('../../config/site').configSchema;

@@ -22,45 +22,21 @@ function getMongoDbConnectionString(database) {
 
   const useAuth = user && password;
 
-  return `mongodb://${useAuth ? `${user}:${password}@` : ''}${host}:${port}/${
-    database ? database : ''
-  }${authSource ? `?authSource=${authSource}` : ''}`;
+  return `mongodb://${useAuth ? `${user}:${password}@` : ''}${host}:${port}/${authSource ? `?authSource=${authSource}` : ''}`;
 }
 
 const url = getMongoDbConnectionString();
 
-exports.dbExists = (dbName) => {
-
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(url, (err, db) => {
-      if (err) {
-        reject(err);
-      } else {
-        var adminDb = db.admin();
-
-        // List all the available databases
-        adminDb.listDatabases(function(err, dbs) {
-          const found = dbs.databases.find((dbObject) => {
-            return dbName === dbObject.name;
-          });
-
-          db.close();
-          resolve(!!found)
-        });
-      }
-    });
-  });
-}
-
 exports.deleteDb = (dbName) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(getMongoDbConnectionString(dbName), (err, client) => {
+    MongoClient.connect(getMongoDbConnectionString(), (err, client) => {
       if (err) {
         return reject(err);
       }
       
       // drop the database
-      client.dropDatabase(function(err, result) {
+      let db = client.db(dbName);
+      db.dropDatabase(function(err, result) {
         client.close();
         if (err) return reject(err);
         resolve(result);

@@ -107,8 +107,6 @@ app.use((req, res, next) => {
   next();
 });
 
-const dbExists        = require('./services/mongo').dbExists;
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: '200mb' }));
 app.use(bodyMw.parseBoolean);

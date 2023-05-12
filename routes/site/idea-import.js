@@ -1,4 +1,3 @@
-const Promise           = require("bluebird");
 const multer            = require('multer');
 const upload            = multer();
 

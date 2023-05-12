@@ -1,84 +1,161 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.USER_API + '/api/admin';
 const httpBuildQuery = require('../utils/httpBuildQuery')
 
 const apiCredentials = {
-    client_id:  process.env.USER_API_CLIENT_ID,
-    client_secret: process.env.USER_API_CLIENT_SECRET,
+  client_id:  process.env.USER_API_CLIENT_ID,
+  client_secret: process.env.USER_API_CLIENT_SECRET,
 }
 
-exports.fetch = (uniqueCodeId) => {
-  const options = {
-    method: 'GET',
-    uri: `${apiUrl}/unique-code/${uniqueCodeId}`,
-    headers: {
-        'Accept': 'application/json'
-    },
-    body: apiCredentials,
-    json: true // Automatically parses the JSON string in the response
+const encodedCredentials = "Basic " + Buffer.from(apiCredentials.client_id+":"+apiCredentials.client_secret).toString('base64');
+
+exports.fetch = async(uniqueCodeId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/unique-code/${uniqueCodeId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': encodedCredentials
+      },
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
   }
 
-  return rp(options);
-//  .then(response => response.json());
+
+
 }
 
-exports.fetchAll = (params) => {
+exports.fetchAll = async(params) => {
+
   const query = httpBuildQuery(params);
 
-  const options = {
-    method: 'GET',
-    uri: `${apiUrl}/unique-codes?${query}`,
-    headers: {
-        'Accept': 'application/json'
-    },
-    body: apiCredentials,
-    json: true // Automatically parses the JSON string in the response
+  try {
+    let response = await fetch(`${apiUrl}/unique-codes?${query}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': encodedCredentials
+      },
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
   }
 
-  return rp(options);
-//  .then(response => response.json());
+
+
 }
 
-exports.create =  (params) => {
+exports.create = async(params) => {
+
   const query = httpBuildQuery(params);
 
-  return rp({
+  try {
+    let response = await fetch(`${apiUrl}/unique-code?${query}`, {
       method: 'POST',
-      uri: `${apiUrl}/unique-code?${query}`,
       headers: {
-          'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
       },
-      body: apiCredentials,
-      json: true // Automatically parses the JSON string in the response
-  });
+      body: '{}',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
+
+
 }
 
-exports.getGeneratorStatus =  (params) => {
+exports.getGeneratorStatus = async(params) => {
+
   const query = httpBuildQuery(params);
-  return rp({
-      uri: `${apiUrl}/unique-code/generator-status?${query}`,
+
+  try {
+    let response = await fetch(`${apiUrl}/unique-code/generator-status?${query}`, {
+      method: 'GET',
       headers: {
-          'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Authorization': encodedCredentials
       },
-      body: apiCredentials,
-      json: true // Automatically parses the JSON string in the response
-  })
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    let result =  await response.json();
+    return result
+  } catch(err) {
+    console.log(err);
+  }
+  
+
+
 }
 
-exports.reset = (uniqueCodeId) => {
-  return rp({
-    method: 'POST',
-    uri: `${apiUrl}/unique-code/${uniqueCodeId}/reset`,
-    json: true, // Automatically parses the JSON string in the response
-    body: Object.assign(apiCredentials),
-  });
+exports.reset = async(uniqueCodeId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/unique-code/${uniqueCodeId}/reset`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      body: '{}',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
+
+
 }
 
-exports.delete = (uniqueCodeId) => {
-  return rp({
-    method: 'POST',
-    uri: `${apiUrl}/unique-code/${uniqueCodeId}/delete`,
-    json: true, // Automatically parses the JSON string in the response
-    body: Object.assign(apiCredentials),
-  });
+exports.delete = async(uniqueCodeId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/unique-code/${uniqueCodeId}/delete`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      body: '{}',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
+
+
 }

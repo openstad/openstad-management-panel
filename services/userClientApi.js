@@ -1,7 +1,5 @@
 const fetch = require('node-fetch');
-const rp = require('request-promise');
 const apiUrl = process.env.USER_API + '/api/admin';
-const nestedObjectAssign = require('nested-object-assign');
 const httpBuildQuery = require('../utils/httpBuildQuery')
 
 const apiCredentials = {
@@ -12,66 +10,118 @@ const apiCredentials = {
 const encodedCredentials = "Basic " + Buffer.from(apiCredentials.client_id+":"+apiCredentials.client_secret).toString('base64');
 
 exports.fetch = async(clientId, withUserRoles=false, excludingRoles=[]) => {
+
   const excludingRolesParam = excludingRoles.join(',');
 
-  const response = await fetch(`${apiUrl}/client/${clientId}?withUserRoles=${withUserRoles}&excludingRoles=${excludingRolesParam}`, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': encodedCredentials
-    },
-  });
-  return await response.json();
+  try {
+    let response = await fetch(`${apiUrl}/client/${clientId}?withUserRoles=${withUserRoles}&excludingRoles=${excludingRolesParam}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.fetchAll = (params) => {
+exports.fetchAll = async(params) => {
+
   const query = params ? httpBuildQuery(params) : '';
 
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/clients?${query}`,
-    headers: {
-        'Accept': 'application/json'
-    },
-    body: apiCredentials,
-    json: true // Automatically parses the JSON string in the response
-  })
-//  .then(response => response.json());
+  try {
+    let response = await fetch(`${apiUrl}/clients?${query}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 };
 
 
-exports.create = (data) => {
-  let body = nestedObjectAssign(data, apiCredentials);
+exports.create = async(data) => {
 
-  return rp({
-      method: 'POST',
-      uri: `${apiUrl}/client`,
+  try {
+    let response = await fetch(`${apiUrl}/client`, {
       headers: {
-          'Accept': 'application/json'
-      },
-      body: body,
-      json: true // Automatically parses the JSON string in the response
-  });
-}
-
-exports.update = (clientId, data) => {
-  return rp({
-    method: 'POST',
-    uri: `${apiUrl}/client/${clientId}`,
-    headers: {
         'Accept': 'application/json',
-    },
-    body: nestedObjectAssign(data, apiCredentials),
-    json: true // Automatically parses the JSON string in the response
-  });
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.delete = (clientId) => {
-  return rp({
-    method: 'POST',
-    uri: `${apiUrl}/client/${clientId}/delete`,
-    json: true, // Automatically parses the JSON string in the response
-    body: apiCredentials,
-  });
+exports.update = async(clientId, data) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/client/${clientId}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
+}
+
+exports.delete = async(clientId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/client/${clientId}/delete`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': encodedCredentials
+      },
+      method: 'POST',
+      body: '{}',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }

@@ -1,52 +1,55 @@
 const apiUrl  = process.env.API_URL;
 const siteId  = process.env.SITE_ID;
-const rp      = require('request-promise');
+const fetch   = require('node-fetch');
 
-const fetchUserData = (req, res, next) => {
+const fetchUserData = async(req, res, next) => {
+
   const jwt = req.query.jwt ? req.query.jwt : req.session.jwt;
 
   if (!jwt) {
     next();
   } else {
+
     const thisHost = req.headers['x-forwarded-host'] || req.get('host');
     const fullUrl = req.protocol + '://' + thisHost;
 
-    const options = {
-        uri: `${apiUrl}/oauth/site/${siteId}/me`,
+    try {
+      let response = await fetch(`${apiUrl}/oauth/site/${siteId}/me`, {
         headers: {
             'Accept': 'application/json',
             "X-Authorization" : `Bearer ${jwt}`,
             "Cache-Control": "no-cache"
         },
-        json: true // Automatically parses the JSON string in the response
-    }
-
-    rp(options)
-      .then(function (user) {
-
-        if (user) {
-          req.user = user
-          res.locals.user = user;
-          next();
-        } else {
-          // if not valid clear the JWT and redirect
-          req.session.jwt = '';
-
-          req.session.save(() => {
-            res.redirect('/');
-            return;
-          })
-        }
+        method: 'GET',
       })
-      .catch((e) => {
-        // if not valid clear the JWT and redirect
+      if (!response.ok) {
+        console.log(response);
+        throw new Error('Fetch failed')
+      }
+
+      let user = await response.json();
+
+      if (user) {
+        req.user = user
+        res.locals.user = user;
+        return next();
+      } else {
         req.session.jwt = '';
 
         req.session.save(() => {
-          res.redirect('/');
-          return;
+          return res.redirect('/');
         })
-      });
+      }
+
+    } catch(err) {
+      // if not valid clear the JWT and redirect
+      req.session.jwt = '';
+      req.session.save(() => {
+        res.redirect('/');
+        return;
+      })
+    }
+
   }
 }
 
