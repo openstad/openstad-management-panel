@@ -116,6 +116,26 @@ let types = [
             },
         ]
     },
+    {
+        key: 'EmailSend',
+        label: 'E-mail verstuurd bericht',
+        isAuthMethod: true,
+        fields: [
+            {
+                label: 'E-mail verstuurd header',
+                key: 'title',
+                default: 'E-mail verstuurd',
+                type: 'text'
+            },
+            {
+                label: 'E-mail Template  ',
+                info: ' <button class="btn btn-secondary" data-target="#loginModal" data-toggle="modal" type="button">More info on the E-mail Template</button>',
+                key: 'template',
+                default: 'Bekijk je Postvak IN om in te loggen. Het kan enkele minuten duren voor de e-mail verschijnt. Geen e-mail gekregen na het versturen van de link? Kijk dan in je ongewenste e-mail (spam) of probeer het opnieuw. Lukt het alsnog niet? Neem contact met ons op.',
+                type: 'textarea'
+            },
+        ]
+    },
 
 ];
 
