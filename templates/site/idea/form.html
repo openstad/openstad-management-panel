@@ -90,7 +90,7 @@
       Budget
     </label>
     <div class="col-sm-8">
-      <input type="number" name="budget" value="{{idea.budget}}" class="form-control" />
+      <input type="number" name="budget" value="{{idea.budget or idea.extraData.budget}}" class="form-control" />
     </div>
   </div>
 
