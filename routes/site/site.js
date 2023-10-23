@@ -1,5 +1,4 @@
 const slugify           = require('slugify');
-const Promise           = require("bluebird");
 const fs                = require('fs').promises;
 const tar               = require('tar');
 const fetch             = require('node-fetch');
@@ -30,7 +29,6 @@ const appUrl            = process.env.APP_URL;
 const siteFields        = [{key: 'title'}];
 
 const deleteMongoDb               = require('../../services/mongo').deleteDb;
-const dbExists                    = require('../../services/mongo').dbExists;
 
 const userApiSettingFields        = require('../../config/auth').userApiSettingFields;
 const userApiRequiredFields       = require('../../config/auth').userApiRequiredFields;

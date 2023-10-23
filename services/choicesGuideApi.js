@@ -1,35 +1,50 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.API_URL;
 const siteApiKey =  process.env.SITE_API_KEY;
 
-exports.fetchAll = (siteId) => {
-  return rp({
-    method: 'GET',
-    uri:  `${apiUrl}/api/site/${siteId}/choicesguide`,
-    headers: {
+exports.fetchAll = async(siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide`, {
+      method: 'GET',
+      headers: {
         'Accept': 'application/json',
-      //  'Authorization' : `Bearer ${token}`,
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.fetch = (siteId, choicesGuideId) => {
-  return rp({
-    method: 'GET',
-    uri:  `${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}?includeChoices=1&includeQuestions=1`,
-    headers: {
+exports.fetch = async(siteId, choicesGuideId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}?includeChoices=1&includeQuestions=1`, {
+      method: 'GET',
+      headers: {
         'Accept': 'application/json',
-      //  'Authorization' : `Bearer ${token}`,
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-// Todo: refactor this method
-exports.create = (siteId, json) => {
+exports.create = async(siteId, json) => {
 
   let promises = [];
 
@@ -40,136 +55,164 @@ exports.create = (siteId, json) => {
   delete json.id;
   json.siteId = siteId;
 
-  const options = {
-    uri:  `${apiUrl}/api/site/${siteId}/choicesguide`,
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      "X-Authorization": siteApiKey
-    },
-    body: json,
-    json: true
-  };
-  return rp(options)
-    .then(result => {
+  let result;
+  try {
 
-      let promises = [];
-      let choicesGuideId = result.id
-
-      choices.forEach((choice) => {
-        delete choice.id;
-        choice.choicesGuideId = choicesGuideId;
-        const options = {
-          uri:  `${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/choice`,
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            "X-Authorization": siteApiKey
-          },
-          body: choice,
-          json: true
-        };
-        promises.push(
-          rp(options)
-        );
-      });
-
-      questiongroups.forEach((questiongroup) => {
-        let choices = questiongroup.choices || [];
-        delete questiongroup.choices;
-        let questions = questiongroup.questions || [];
-        delete questiongroup.questions;
-        questiongroup.choicesGuideId = choicesGuideId;
-        const options = {
-          uri:  `${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/questiongroup`,
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            "X-Authorization": siteApiKey
-          },
-          body: questiongroup,
-          json: true
-        };
-        promises.push(
-          rp(options)
-            .then(result => {
-              let subpromises = [];
-              let questionGroupId = result.id
-              choices.forEach((choice) => {
-                delete choice.id;
-                choice.questionGroupId = questionGroupId;
-                const options = {
-                  uri:  `${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/questiongroup/${questionGroupId}/choice`,
-                  method: 'POST',
-                  headers: {
-                    'Accept': 'application/json',
-                    "X-Authorization": siteApiKey
-                  },
-                  body: choice,
-                  json: true
-                };
-                subpromises.push(
-                  rp(options)
-                );
-              });
-              questions.forEach((question) => {
-                delete question.id;
-                question.questionGroupId = questionGroupId;
-                const options = {
-                  uri:  `${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/questiongroup/${questionGroupId}/question`,
-                  method: 'POST',
-                  headers: {
-                    'Accept': 'application/json',
-                    "X-Authorization": siteApiKey
-                  },
-                  body: question,
-                  json: true
-                };
-                subpromises.push(
-                  rp(options)
-                );
-              });
-              return subpromises;
-            })
-            .then(subpromises => {
-              return Promise
-                .all(subpromises)
-            })
-
-        );
-      });
-      return promises;
-    })
-    .then(promises => {
-      return Promise
-        .all(promises)
-    })
-}
-
-exports.delete = (token, siteId, choicesGuideId) => {
-  return rp({
-     method: 'DELETE',
-      uri:  apiUrl + `/api/site/${siteId}/choicesguide/${choicesGuideId}`,
+    let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide`, {
+      method: 'POST',
       headers: {
-          'Accept': 'application/json',
-        //  "X-Authorization" : ` Bearer ${token}`,
-          "X-Authorization": siteApiKey
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "X-Authorization": siteApiKey
       },
-      json: true // Automatically parses the JSON string in the response
-  });
+      body: JSON.stringify(json, null, 2),
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+
+    result =  await response.json();
+    let choicesGuideId = result.id
+
+    for (let choice of choices) {
+
+      delete choice.id;
+      choice.choicesGuideId = choicesGuideId;
+
+      let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/choice`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "X-Authorization": siteApiKey
+        },
+        body: JSON.stringify(choice, null, 2),
+      })
+      if (!response.ok) {
+        console.log(response);
+        throw new Error('Fetch failed')
+      }
+
+    }
+
+    for (let questiongroup of questiongroups) {
+
+      let choices = questiongroup.choices || [];
+      delete questiongroup.choices;
+      let questions = questiongroup.questions || [];
+      delete questiongroup.questions;
+      questiongroup.choicesGuideId = choicesGuideId;
+
+      let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/questiongroup`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "X-Authorization": siteApiKey
+        },
+        body: JSON.stringify(questiongroup, null, 2),
+      })
+      if (!response.ok) {
+        console.log(response);
+        throw new Error('Fetch failed')
+      }
+
+      result =  await response.json();
+      let questionGroupId = result.id
+
+      for (let choice of choices) {
+
+        delete choice.id;
+        choice.questionGroupId = questionGroupId;
+
+        let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/questiongroup/${questionGroupId}/choice`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "X-Authorization": siteApiKey
+          },
+          body: JSON.stringify(choice, null, 2),
+        })
+        if (!response.ok) {
+          console.log(response);
+          throw new Error('Fetch failed')
+        }
+
+      }
+
+      for (let question of questions) {
+
+        delete question.id;
+        question.questionGroupId = questionGroupId;
+
+        let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide/${choicesGuideId}/questiongroup/${questionGroupId}/question`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "X-Authorization": siteApiKey
+          },
+          body: JSON.stringify(question, null, 2),
+        })
+        if (!response.ok) {
+          console.log(response);
+          throw new Error('Fetch failed')
+        }
+        
+      }
+      
+    }
+
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.update = (token, siteId, data) => {
-  console.log('update.:', token, siteId, data.extraData);
-  return rp({
-    method: 'PUT',
-    uri: `${apiUrl}/api/site/${siteId}/choicesguide/${data.id}`,
-    headers: {
+exports.delete = async(token, siteId, choicesGuideId) => {
+
+  try {
+    let response = await fetch(apiUrl + `/api/site/${siteId}/choicesguide/${choicesGuideId}`, {
+      method: 'DELETE',
+      headers: {
         'Accept': 'application/json',
-      //  'Authorization' : `Bearer ${token}`,
         "X-Authorization": siteApiKey
-    },
-    body: data,
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
+}
+
+exports.update = async(token, siteId, data) => {
+
+  console.log('update.:', token, siteId, data.extraData);
+
+  try {
+    let response = await fetch(`${apiUrl}/api/site/${siteId}/choicesguide/${data.id}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "X-Authorization": siteApiKey
+      },
+      body: JSON.stringify(data),
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }

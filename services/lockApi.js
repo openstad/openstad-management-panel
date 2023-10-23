@@ -1,40 +1,66 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.API_URL + '/api';
 const siteApiKey =  process.env.SITE_API_KEY;
 
-exports.fetch = (siteId) => {
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/lock/${siteId}`,
-    headers: {
+exports.fetch = async(siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/lock/${siteId}`, {
+      headers: {
         'Accept': 'application/json',
-        "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+        "X-Authorization": siteApiKey,
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.fetchAll = () => {
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/lock`,
-    headers: {
+exports.fetchAll = async() => {
+
+  try {
+    let response = await fetch(`${apiUrl}/lock`, {
+      headers: {
         'Accept': 'application/json',
-        "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+        "X-Authorization": siteApiKey,
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.delete = (siteId) => {
+exports.delete = async(siteId) => {
 
-  return rp({
-    method: 'DELETE',
-    uri: `${apiUrl}/lock/${siteId}`,
-    headers: {
+  try {
+    let response = await fetch(`${apiUrl}/lock/${siteId}`, {
+      headers: {
         'Accept': 'application/json',
-        "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+        "X-Authorization": siteApiKey,
+      },
+      method: 'DELETE',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }

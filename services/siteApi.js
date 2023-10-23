@@ -1,96 +1,156 @@
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const apiUrl = process.env.API_URL + '/api';
 const siteApiKey =  process.env.SITE_API_KEY;
 
-exports.fetch = (siteId) => {
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/site/${siteId}`,
-    headers: {
+exports.fetch = async(siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/site/${siteId}`, {
+      headers: {
         'Accept': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.fetchAll = () => {
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/site`,
-    headers: {
+exports.fetchAll = async() => {
+
+  try {
+    let response = await fetch(`${apiUrl}/site`, {
+      headers: {
         'Accept': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.fetchAllWithIssues = (siteId) => {
-  return rp({
-    method: 'GET',
-    uri: `${apiUrl}/site/issues`,
-    headers: {
+exports.fetchAllWithIssues = async(siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/site/issues`, {
+      headers: {
         'Accept': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    json: true
-  })
+      },
+      method: 'GET',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.anonymize = (token, siteId) => {
-  return rp({
-    method: 'PUT',
-    uri: `${apiUrl}/site/${siteId}/do-anonymize-all-users`,
-    headers: {
+exports.anonymize = async(token, siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/site/${siteId}/do-anonymize-all-users`, {
+      headers: {
         'Accept': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+      method: 'PUT',
+      body: {},
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.delete = (token, siteId) => {
-  return rp({
-    method: 'DELETE',
-    uri: `${apiUrl}/site/${siteId}`,
-    headers: {
+exports.delete = async(token, siteId) => {
+
+  try {
+    let response = await fetch(`${apiUrl}/site/${siteId}`, {
+      headers: {
         'Accept': 'application/json',
         "X-Authorization": siteApiKey
-    },
-    json: true // Automatically parses the JSON string in the response
-  });
+      },
+      method: 'DELETE',
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
-exports.update = (token, siteId, data) => {
-  const options = {
-    method: 'PUT',
-    uri: `${apiUrl}/site/${siteId}`,
-    headers: {
-        'Accept': 'application/json',
-        "X-Authorization": siteApiKey
-    },
-    body: data,
-    json: true // Automatically parses the JSON string in the response
-  };
+exports.update = async(token, siteId, data) => {
 
-  return rp(options);
+  try {
+    let response = await fetch(`${apiUrl}/site/${siteId}`, {
+      headers: {
+        'Accept': 'application/json',
+        "Content-type": "application/json",
+        "X-Authorization": siteApiKey
+      },
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
 
 
-exports.create = (data) => {
-  const options = {
-    method: 'POST',
-    uri: `${apiUrl}/site`,
-    headers: {
-        'Accept': 'application/json',
-        "X-Authorization": siteApiKey
-    },
-    body: data,
-    json: true // Automatically parses the JSON string in the response
-  };
+exports.create = async(data) => {
 
-  return rp(options).then(site => {
-    return site
-  });
+  try {
+    let response = await fetch(`${apiUrl}/site`, {
+      headers: {
+        'Accept': 'application/json',
+        "Content-type": "application/json",
+        "X-Authorization": siteApiKey
+      },
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('Fetch failed')
+    }
+    return await response.json();
+  } catch(err) {
+    console.log(err);
+  }
+
 }
