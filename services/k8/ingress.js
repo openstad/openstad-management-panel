@@ -171,7 +171,6 @@ const getIngressBody = (ingressName, domain, addWww, secretName) => {
       },
       name: ingressName,
       annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
         'nginx.ingress.kubernetes.io/from-to-www-redirect': "true",
         'nginx.ingress.kubernetes.io/proxy-body-size': '128m',
         'nginx.ingress.kubernetes.io/configuration-snippet': `more_set_headers "X-Content-Type-Options: nosniff";
@@ -181,6 +180,7 @@ more_set_headers "Referrer-Policy: same-origin";`
       }
     },
     spec: {
+      ingressClassName: 'nginx',
       rules: [{
         host: domain,
         http: {
